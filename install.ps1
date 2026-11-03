@@ -3,14 +3,22 @@ $ErrorActionPreference = 'Stop'
 $ProjectRoot = $PSScriptRoot
 $BundledRuntime = Join-Path $ProjectRoot 'runtime'
 $Profile = Join-Path $BundledRuntime 'dsh\profiles\fame-memory'
-$DshRoot = if (Test-Path -LiteralPath (Join-Path $BundledRuntime 'node\node.exe')) { $BundledRuntime } else { 'D:\AI\DeepSeekHarness' }
+$DshRoot = $BundledRuntime
 $Node = Join-Path $DshRoot 'node\node.exe'
+$InstalledDsh = if (Test-Path -LiteralPath (Join-Path $DshRoot 'app\node_modules\@deepseek-ai\dsh\package.json')) {
+  (Get-Content -LiteralPath (Join-Path $DshRoot 'app\node_modules\@deepseek-ai\dsh\package.json') -Raw | ConvertFrom-Json).version
+} else { $null }
+$InstalledCompanion = if (Test-Path -LiteralPath (Join-Path $Profile 'node_modules\dsh-dafeiyu\package.json')) {
+  (Get-Content -LiteralPath (Join-Path $Profile 'node_modules\dsh-dafeiyu\package.json') -Raw | ConvertFrom-Json).version
+} else { $null }
 if (-not (Test-Path -LiteralPath $Node) -or
+    $InstalledDsh -ne '0.2.2-alpha.3' -or
+    $InstalledCompanion -ne '0.1.23' -or
     -not (Test-Path -LiteralPath (Join-Path $DshRoot 'app\node_modules\@deepseek-ai\dsh\lib\bin.js')) -or
     -not (Test-Path -LiteralPath (Join-Path $Profile 'cordis.patch.yml')) -or
     -not (Test-Path -LiteralPath (Join-Path $Profile 'node_modules\dsh-dafeiyu\package.json'))) {
   & (Join-Path $ProjectRoot 'scripts\setup-runtime.ps1')
-  $DshRoot = if (Test-Path -LiteralPath (Join-Path $BundledRuntime 'node\node.exe')) { $BundledRuntime } else { 'D:\AI\DeepSeekHarness' }
+  $DshRoot = $BundledRuntime
   $Node = Join-Path $DshRoot 'node\node.exe'
 }
 $StorageConfig = Join-Path $ProjectRoot 'runtime\storage.json'

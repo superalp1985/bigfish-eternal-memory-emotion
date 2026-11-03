@@ -47,6 +47,7 @@
 | 随口提过的喜好、称呼和小秘密 | 自动提取记忆，关联原始对话，按当前话题召回 |
 | 聊天时的情绪变化 | 分别保存你和大肥鱼的 FAME 八维情感状态 |
 | 很长很长的同一段聊天 | 自动压缩旧上下文，以同一 session ID 重建精简工作区 |
+| 图片、语音、视频和其他文件 | 原始字节按 SHA-256 永久归档，和消息一起备份、迁移、恢复 |
 | 那些不必每轮都带着的往事 | 原文留在本机硬盘，旧活动对象释放，需要时再检索 |
 | 换盘、换电脑后的“我们” | 打包程序、记忆、约定和情感，在新位置恢复后接着聊 |
 
@@ -70,7 +71,9 @@
 
 先保存原文，再整理记忆；先验证新的工作快照，再释放旧活动对象。整个过程通过 DSH 插件和公开生命周期接口完成，**不修改 Agent 核心源码**。
 
-默认工作区预算为 **600 条事件 / 64,000 字符**，最多同时加载 **4 个会话**。近期内容优先留在工作区，完整历史存在 SQLite，热记忆缓存有独立上限。重启时读取检查点和当前活动代次，继续同一个会话。
+默认工作区预算已扩展到 **2,400 条事件 / 256,000 字符**，近期内容预算 **64,000 字符**，最多同时加载 **8 个会话**。近期内容优先留在工作区，完整历史、媒体原件和双方情感永久留在本机档案中；没有自动过期、自动删图或按时间清理。重启时读取检查点和当前活动代次，继续同一个会话。
+
+聊天框可以直接添加图片、音频、视频和普通文件。在所选模型与提供方支持时，图片会通过 DeepSeek Harness 的原生视觉附件进入模型请求；其他文件由 DSH 以只读文件句柄呈现。无论模型是否能理解某种格式，BigFish 都先保存原件，保存与理解互不混淆。
 
 ## 80 轮之后，它记得什么？
 
@@ -118,9 +121,9 @@
 
 **换文件夹、换硬盘：** 点「更换位置」。程序自动打包、校验并切换记忆位置，原有数据保留。
 
-**换电脑：** 点「一键打包带走」。得到包含程序、运行环境、记忆和情感的 ZIP；在新电脑解压，运行 `Install.cmd`，配置自己的模型连接，继续原来的会话。
+**换电脑：** 点「一键打包带走」。得到包含程序、运行环境、全部记忆、双方情感和多模态原件的 ZIP；在新电脑解压，运行 `Install.cmd`，配置自己的模型连接，继续原来的会话。
 
-带走的是原文、记忆、约定和情感记录。API 密钥留在本机，不进入迁移包。
+带走的是原文、记忆、约定、情感和图片/音频/视频/文件原件。媒体按内容去重，备份和恢复逐个校验 SHA-256；API 密钥留在本机，不进入迁移包。
 
 > 愿下一次打开窗口时，你不用从“你好，我叫……”重新开始。
 
@@ -131,7 +134,7 @@
 - [实测与验证](VALIDATION.md)
 - [视觉素材来源](docs/ASSETS.md)
 
-当前版本面向文本陪伴：外部图片和附件文件本体不在迁移范围内。对话会发送给你配置的模型服务，记忆提取和压缩也会产生模型调用；本地备份为压缩包，不提供加密。该项目为社区作品，与 DeepSeek 官方无隶属或背书关系。
+当前运行时固定为项目私有的 DeepSeek Harness `0.2.2-alpha.3`，不会覆盖电脑上已有的 DSH 安装和对话。对话及模型可理解的附件会发送给你配置的模型服务，记忆提取和压缩也会产生模型调用；本地备份为压缩包，不提供加密。该项目为社区作品，与 DeepSeek 官方无隶属或背书关系。
 
 ---
 
@@ -145,6 +148,7 @@ The little things matter: a favorite tea, a changed plan, a private phrase. BigF
 
 - **Keep the same session.** Older context is compacted, checkpointed and replaced through public DSH lifecycle APIs.
 - **Keep the original words.** SQLite preserves the archive while the active working set and recall cache remain bounded.
+- **Keep the original media.** Images, audio, video and files are stored byte-for-byte in a SHA-256-addressed archive and included in backup and migration.
 - **Keep both sides of the story.** Separate eight-dimensional FAME states are saved for the user and companion.
 - **Take the memories with you.** One-click packaging includes the app, runtime, memories and emotional records. Credentials stay on the original machine.
 
@@ -154,6 +158,6 @@ The completed live run covered **80 turns**, **19 automatic compactions**, **12/
 
 **Move:** use the storage-location control, or package the app and memories into a ZIP, extract it on the destination computer and run `Install.cmd`.
 
-Text conversations are supported; external attachment bytes are not transferred. Model calls use the configured remote service. Backups are compressed, not encrypted. This is an independent community project.
+The active window defaults to 2,400 events / 256,000 characters, while the durable archive has no automatic expiry or media cleanup. Image understanding uses the Harness attachment route when the selected model and provider support it; other media remains durably downloadable even when the model cannot interpret it. Model calls use the configured remote service. Backups are compressed, not encrypted. This is an independent community project.
 
 [Technical notes](docs/TECHNICAL.md) · [FAME reference](FAME_REFERENCE.md) · [Validation](VALIDATION.md) · [Visual credits](docs/ASSETS.md)

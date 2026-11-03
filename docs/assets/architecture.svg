@@ -1,3 +1,43 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="530" viewBox="0 0 1280 530" role="img" aria-label="先归档，再压缩，旧活动对象释放，同一会话继续">
-<title>先归档，再压缩，旧活动对象释放，同一会话继续</title><style>text{font-family:"Microsoft YaHei","PingFang SC","Noto Sans CJK SC",Arial,sans-serif;letter-spacing:0} .b{font-weight:700}</style>
-<rect x="0" y="0" width="1280" height="530" rx="0" fill="#f7faf8" /><text x="55" y="62" font-size="34" fill="#183e39" class="b">轻装继续，完整珍藏。</text><text x="55" y="101" font-size="20" fill="#66847b" >原文在硬盘，近期对话与重要记忆在工作区。</text><text x="55" y="158" font-size="17" fill="#117966" class="b">01</text><line x1="55" y1="174" x2="290" y2="174" stroke="#117966" stroke-width="3" /><text x="55" y="218" font-size="25" fill="#183e39" class="b">先保存</text><text x="55" y="258" font-size="19" fill="#183e39" >原始事件落盘</text><text x="55" y="292" font-size="17" fill="#66847b" >来源、时间与校验</text><line x1="302" y1="232" x2="342" y2="232" stroke="#117966" stroke-width="3" /><path d="M 334 225 L 342 232 L 334 239" fill="none" stroke="#117966" stroke-width="3"/><text x="365" y="158" font-size="17" fill="#117966" class="b">02</text><line x1="365" y1="174" x2="600" y2="174" stroke="#117966" stroke-width="3" /><text x="365" y="218" font-size="25" fill="#183e39" class="b">再整理</text><text x="365" y="258" font-size="19" fill="#183e39" >摘要 + 记忆 + 情感</text><text x="365" y="292" font-size="17" fill="#66847b" >检查点验证</text><line x1="612" y1="232" x2="652" y2="232" stroke="#117966" stroke-width="3" /><path d="M 644 225 L 652 232 L 644 239" fill="none" stroke="#117966" stroke-width="3"/><text x="675" y="158" font-size="17" fill="#117966" class="b">03</text><line x1="675" y1="174" x2="910" y2="174" stroke="#117966" stroke-width="3" /><text x="675" y="218" font-size="25" fill="#183e39" class="b">释放旧活动对象</text><text x="675" y="258" font-size="19" fill="#183e39" >保留精简工作区</text><text x="675" y="292" font-size="17" fill="#66847b" >公开生命周期接口</text><line x1="922" y1="232" x2="962" y2="232" stroke="#117966" stroke-width="3" /><path d="M 954 225 L 962 232 L 954 239" fill="none" stroke="#117966" stroke-width="3"/><text x="985" y="158" font-size="17" fill="#117966" class="b">04</text><line x1="985" y1="174" x2="1220" y2="174" stroke="#117966" stroke-width="3" /><text x="985" y="218" font-size="25" fill="#183e39" class="b">继续聊</text><text x="985" y="258" font-size="19" fill="#183e39" >同一个 session ID</text><text x="985" y="292" font-size="17" fill="#66847b" >需要往事时再召回</text><rect x="55" y="341" width="1170" height="115" rx="6" fill="#d5eee7" /><text x="85" y="381" font-size="24" fill="#183e39" class="b">本地记忆库</text><text x="85" y="419" font-size="21" fill="#183e39" >原文档案  ·  记忆节点  ·  FAME 状态  ·  恢复检查点</text><text x="1170" y="383" font-size="25" fill="#117966" text-anchor="end" class="b">SQLite</text><text x="1170" y="421" font-size="18" fill="#66847b" text-anchor="end">每个会话独立检索</text><text x="55" y="501" font-size="18" fill="#66847b" >600 条活动事件 / 64,000 字符默认预算 / 最多加载 4 个会话</text></svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="530" viewBox="0 0 1280 530">
+  <style>
+    text { font-family: "Segoe UI", "Microsoft YaHei", sans-serif; letter-spacing: 0; }
+    .title { font-size: 34px; font-weight: 700; fill: #183e39; }
+    .lead { font-size: 19px; fill: #66847b; }
+    .step { font-size: 17px; font-weight: 700; fill: #117966; }
+    .head { font-size: 24px; font-weight: 700; fill: #183e39; }
+    .body { font-size: 17px; fill: #46635c; }
+    .small { font-size: 16px; fill: #66847b; }
+  </style>
+  <rect width="1280" height="530" fill="#f7faf8"/>
+  <text x="55" y="62" class="title">活动记忆尽量打开，原始记忆永久珍藏。</text>
+  <text x="55" y="101" class="lead">文字、图片、音频、视频和文件先完整落盘；压缩只整理模型工作区，不删除原件。</text>
+  <g transform="translate(55 145)">
+    <text class="step">01</text><line y1="18" x2="250" y2="18" stroke="#117966" stroke-width="3"/>
+    <text y="65" class="head">先保存原件</text><text y="102" class="body">原始事件 + 媒体字节</text>
+    <text y="134" class="small">SHA-256 校验与去重</text>
+  </g>
+  <path d="M315 235h45m-9-8 9 8-9 8" fill="none" stroke="#117966" stroke-width="3"/>
+  <g transform="translate(385 145)">
+    <text class="step">02</text><line y1="18" x2="250" y2="18" stroke="#117966" stroke-width="3"/>
+    <text y="65" class="head">再组织记忆</text><text y="102" class="body">知识路由 + 双方情感</text>
+    <text y="134" class="small">来源引用始终可追溯</text>
+  </g>
+  <path d="M645 235h45m-9-8 9 8-9 8" fill="none" stroke="#117966" stroke-width="3"/>
+  <g transform="translate(715 145)">
+    <text class="step">03</text><line y1="18" x2="250" y2="18" stroke="#117966" stroke-width="3"/>
+    <text y="65" class="head">扩大活动记忆</text><text y="102" class="body">2,400 事件 / 256,000 字符</text>
+    <text y="134" class="small">重要往事按话题召回</text>
+  </g>
+  <path d="M975 235h45m-9-8 9 8-9 8" fill="none" stroke="#117966" stroke-width="3"/>
+  <g transform="translate(1045 145)">
+    <text class="step">04</text><line y1="18" x2="180" y2="18" stroke="#117966" stroke-width="3"/>
+    <text y="65" class="head">同一会话继续</text><text y="102" class="body">超预算才压缩工作区</text>
+    <text y="134" class="small">档案不自动清理</text>
+  </g>
+  <rect x="55" y="350" width="1170" height="118" rx="6" fill="#d5eee7"/>
+  <text x="85" y="393" class="head">本地永久档案</text>
+  <text x="85" y="433" font-size="20" fill="#183e39">对话原文 · 多模态原件 · 记忆节点 · FAME 状态 · 恢复检查点</text>
+  <text x="1170" y="393" text-anchor="end" font-size="24" font-weight="700" fill="#117966">SQLite + SHA-256 媒体库</text>
+  <text x="1170" y="431" text-anchor="end" class="small">备份、换盘、迁移逐个校验</text>
+  <text x="55" y="507" class="small">存储上限由可用硬盘空间决定；模型单轮可见内容仍受模型上下文容量约束。</text>
+</svg>

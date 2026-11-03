@@ -12,8 +12,20 @@ export const TABLES = ['sessions', 'events', 'memories', 'edges', 'fame_states',
 
 export function eventText(event) {
   const data = event.data ?? {};
-  const blocks = data.content ?? data.message?.content ?? [];
-  return blocks.filter(x => x.type === 'text' && typeof x.text === 'string').map(x => x.text).join('\n');
+  const message = data.message ?? data;
+  const blocks = message.content ?? [];
+  const text = blocks.filter(block => block.type === 'text' && typeof block.text === 'string').map(block => block.text).join('\n');
+  if (text) return text;
+  if (Array.isArray(message.source?.fameMedia) && message.source.fameMedia.length) {
+    return message.source.fameMedia.map(ref => `[${ref.kind}: ${ref.name}, ${ref.bytes} bytes]`).join('\n');
+  }
+  return blocks.map(block => {
+    if (block.type === 'image' || block.type === 'file') {
+      const attachment = block.attachment ?? {};
+      return `[${block.type}: ${attachment.name ?? 'attachment'}, ${attachment.bytes ?? 0} bytes]`;
+    }
+    return '';
+  }).filter(Boolean).join('\n');
 }
 
 function terms(query) {
@@ -273,13 +285,20 @@ export class MemoryStore {
   }
 
   transcript(id, before = Number.MAX_SAFE_INTEGER, limit = 50) {
-    return this.db.prepare(`SELECT e.rowid AS cursor,e.generation,e.seq,e.type,e.text,e.created_at FROM events e
+    const rows = this.db.prepare(`SELECT e.rowid AS cursor,e.generation,e.seq,e.type,e.text,e.created_at,e.json FROM events e
       WHERE e.session_id=? AND e.rowid<? AND e.type IN ('user/message','assistant/message') AND e.text!=''
       AND (e.type='assistant/message' OR coalesce(json_extract(e.json,'$.data.source.kind'),'user')='user')
       AND NOT EXISTS (SELECT 1 FROM events prior WHERE prior.session_id=e.session_id AND prior.rowid<e.rowid
         AND coalesce(json_extract(prior.json,'$.data.id'),json_extract(prior.json,'$.data.message.id')) =
             coalesce(json_extract(e.json,'$.data.id'),json_extract(e.json,'$.data.message.id')))
       ORDER BY e.rowid DESC LIMIT ?`).all(id, before, Math.min(100, limit)).reverse();
+    return rows.map(row => {
+      const data = parse(row.json).data;
+      const message = data.message ?? data;
+      const attachments = message.source?.fameMedia ?? [];
+      delete row.json;
+      return { ...row, attachments };
+    });
   }
 
   stats(id) {

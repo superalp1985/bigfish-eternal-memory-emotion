@@ -10,9 +10,11 @@ import { createGzip, createGunzip } from 'node:zlib';
 import { setImmediate as yieldTurn } from 'node:timers/promises';
 import { MemoryStore, TABLES, hash } from './memory-store.mjs';
 import { FAME_KEYS, FAME_VERSION, validateFame } from './fame.mjs';
+import { MediaStore } from './media-store.mjs';
 
-export const BACKUP_VERSION = 1;
+export const BACKUP_VERSION = 2;
 export const MAX_RECORD_BYTES = 8 * 1024 * 1024;
+const MEDIA_CHUNK_BYTES = 384 * 1024;
 const SCHEMA_VERSION = 1;
 const FORMAT = 'fame-vault';
 const ADAPTER_OWNER = 'fame-dsh-memory/v1';
@@ -180,6 +182,30 @@ function validateReferences(db) {
   }
 }
 
+async function validateMediaReferences(db, mediaStore) {
+  const checked = new Set();
+  for (const row of db.prepare("SELECT json FROM events WHERE type='user/message'").iterate()) {
+    const event = jsonValue(row.json, 'user event', true);
+    const message = event.data?.message ?? event.data;
+    const refs = message?.source?.fameMedia ?? [];
+    if (!Array.isArray(refs)) fail('invalid media reference list');
+    for (const ref of refs) {
+      if (!isObject(ref) || Object.keys(ref).length !== 5 || !/^[a-f0-9]{64}$/.test(ref.id) ||
+          !Number.isSafeInteger(ref.bytes) || ref.bytes < 0 || typeof ref.name !== 'string' || ref.name.length > 240 ||
+          typeof ref.mediaType !== 'string' || !/^[\w.+-]+\/[\w.+-]+$/.test(ref.mediaType) ||
+          !['image', 'file'].includes(ref.kind)) fail('invalid media reference');
+      if (ref.kind === 'image' && !['image/png', 'image/jpeg', 'image/webp', 'image/gif'].includes(ref.mediaType)) {
+        fail('invalid archived image type');
+      }
+      if (!checked.has(ref.id)) {
+        try { await mediaStore.verify(ref); }
+        catch (cause) { throw new Error(`FAME backup: media verification failed: ${ref.id}`, { cause }); }
+        checked.add(ref.id);
+      }
+    }
+  }
+}
+
 function removeTemporary(path, parent, prefix) {
   const target = resolve(path);
   if (dirname(target) !== resolve(parent) || !basename(target).startsWith(prefix)) {
@@ -200,7 +226,7 @@ function encode(record) {
   return line;
 }
 
-async function* archiveRecords(db, preserveModel, result) {
+async function* archiveRecords(db, preserveModel, result, mediaStore) {
   const digest = createHash('sha256');
   const counts = emptyCounts();
   let records = 0;
@@ -228,9 +254,37 @@ async function* archiveRecords(db, preserveModel, result) {
       if (records % 128 === 0) await yieldTurn();
     }
   }
+  let mediaObjects = 0;
+  let mediaBytes = 0;
+  for (const media of mediaStore.list()) {
+    const objectHash = createHash('sha256');
+    let offset = 0;
+    for await (const chunk of createReadStream(media.path, { highWaterMark: MEDIA_CHUNK_BYTES })) {
+      objectHash.update(chunk);
+      for (let start = 0; start < chunk.length; start += MEDIA_CHUNK_BYTES) {
+        const part = chunk.subarray(start, Math.min(start + MEDIA_CHUNK_BYTES, chunk.length));
+        const line = encode({ type: 'media', id: media.id, bytes: media.bytes, offset,
+          data: part.toString('base64'), final: offset + part.length === media.bytes });
+        digest.update(line);
+        yield line;
+        offset += part.length;
+        records++;
+      }
+    }
+    if (offset === 0) {
+      const line = encode({ type: 'media', id: media.id, bytes: 0, offset: 0, data: '', final: true });
+      digest.update(line);
+      yield line;
+      records++;
+    }
+    if (offset !== media.bytes || objectHash.digest('hex') !== media.id) fail(`media checksum mismatch: ${media.id}`);
+    mediaObjects++;
+    mediaBytes += media.bytes;
+    if (!Number.isSafeInteger(mediaBytes)) fail('media archive exceeds the supported byte count');
+  }
   const sha256 = digest.digest('hex');
-  Object.assign(result, { version: BACKUP_VERSION, sessions: counts.sessions, records, counts, sha256 });
-  yield encode({ type: 'footer', algorithm: 'sha256', sha256, records, counts });
+  Object.assign(result, { version: BACKUP_VERSION, sessions: counts.sessions, records, counts, mediaObjects, mediaBytes, sha256 });
+  yield encode({ type: 'footer', algorithm: 'sha256', sha256, records, counts, mediaObjects, mediaBytes });
 }
 
 /**
@@ -239,7 +293,7 @@ async function* archiveRecords(db, preserveModel, result) {
  * Session and checkpoint runtime options lose all connection/machine settings.
  * The destination must be new, end in .fame.gz, and support hard-link publication.
  */
-export async function exportVault(store, destination, { preserveModel = false } = {}) {
+export async function exportVault(store, destination, { preserveModel = false, mediaStore } = {}) {
   if (typeof destination !== 'string' || !destination.toLowerCase().endsWith('.fame.gz')) {
     fail('destination must end in .fame.gz');
   }
@@ -247,6 +301,7 @@ export async function exportVault(store, destination, { preserveModel = false } 
     fail('export requires an open file-backed MemoryStore');
   }
   if (typeof preserveModel !== 'boolean') fail('invalid preserveModel option');
+  mediaStore ??= new MediaStore(dirname(resolve(store.path)));
   const target = resolve(destination);
   const parent = dirname(target);
   if (existsSync(target)) fail('destination already exists');
@@ -269,10 +324,11 @@ export async function exportVault(store, destination, { preserveModel = false } 
     snapshot.exec('PRAGMA query_only=ON; PRAGMA trusted_schema=OFF');
     validateSchema(snapshot);
     validateReferences(snapshot);
+    await validateMediaReferences(snapshot, mediaStore);
     const staged = join(temporary, 'archive.fame.gz');
     const result = { path: target };
     await pipeline(
-      archiveRecords(snapshot, preserveModel, result),
+      archiveRecords(snapshot, preserveModel, result, mediaStore),
       createGzip(),
       createWriteStream(staged, { flags: 'wx', mode: 0o600 }),
     );
@@ -313,7 +369,7 @@ async function* boundedLines(source) {
   if (size !== 0) fail('truncated record: missing final newline');
 }
 
-async function loadArchive(path, store) {
+async function loadArchive(path, store, mediaStore) {
   const digest = createHash('sha256');
   const counts = emptyCounts();
   const statements = Object.fromEntries(TABLE_NAMES.map(table => [
@@ -321,28 +377,40 @@ async function loadArchive(path, store) {
       VALUES (${columns(table).map(() => '?').join(',')})`),
   ]));
   const decoder = new TextDecoder('utf-8', { fatal: true });
-  let header = false;
+  let header;
   let footer;
   let records = 0;
   let tableIndex = -1;
+  let mediaStarted = false;
+  let mediaObjects = 0;
+  let mediaBytes = 0;
+  const mediaIds = new Set();
   await pipeline(createReadStream(path), createGunzip(), async source => {
-    for await (const line of boundedLines(source)) {
-      if (footer) fail('trailing data after footer');
-      let record;
-      try { record = JSON.parse(decoder.decode(line)); }
+    const lines = boundedLines(source)[Symbol.asyncIterator]();
+    const read = async () => {
+      const next = await lines.next();
+      if (next.done) return null;
+      try { return { line: next.value, record: JSON.parse(decoder.decode(next.value)) }; }
       catch { fail('invalid UTF-8 or JSON record'); }
-      if (!header) {
+    };
+    const account = line => { digest.update(line); records++; };
+    for (let item = await read(); item; item = await read()) {
+      const { line, record } = item;
+      if (footer) fail('trailing data after footer');
+      if (header === undefined) {
         exactKeys(record, ['type', 'format', 'version', 'schemaVersion', 'tables'], 'header');
-        if (record.type !== 'header' || record.format !== FORMAT || record.version !== BACKUP_VERSION ||
+        if (record.type !== 'header' || record.format !== FORMAT || ![1, BACKUP_VERSION].includes(record.version) ||
             record.schemaVersion !== SCHEMA_VERSION || JSON.stringify(record.tables) !== JSON.stringify(TABLE_NAMES)) {
           fail('unsupported format/version/schema tables');
         }
-        header = true;
+        header = record.version;
         digest.update(line);
         continue;
       }
       if (record?.type === 'footer') {
-        exactKeys(record, ['type', 'algorithm', 'sha256', 'records', 'counts'], 'footer');
+        exactKeys(record, header === 1
+          ? ['type', 'algorithm', 'sha256', 'records', 'counts']
+          : ['type', 'algorithm', 'sha256', 'records', 'counts', 'mediaObjects', 'mediaBytes'], 'footer');
         exactKeys(record.counts, TABLE_NAMES, 'footer counts');
         if (record.algorithm !== 'sha256' || typeof record.sha256 !== 'string' ||
             !/^[0-9a-f]{64}$/.test(record.sha256) || record.sha256 !== digest.digest('hex')) {
@@ -351,9 +419,49 @@ async function loadArchive(path, store) {
         if (record.records !== records || TABLE_NAMES.some(table => record.counts[table] !== counts[table])) {
           fail('footer count mismatch');
         }
+        if (header === 2 && (record.mediaObjects !== mediaObjects || record.mediaBytes !== mediaBytes)) fail('media count mismatch');
         footer = record;
         continue;
       }
+      if (record?.type === 'media') {
+        if (header !== 2 || typeof record.id !== 'string' || !/^[a-f0-9]{64}$/.test(record.id) ||
+            mediaIds.has(record.id) || !Number.isSafeInteger(record.bytes) || record.bytes < 0 ||
+            !Number.isSafeInteger(record.offset) || record.offset !== 0 ||
+            typeof record.data !== 'string' || typeof record.final !== 'boolean') fail('invalid media object record');
+        mediaStarted = true;
+        mediaIds.add(record.id);
+        const id = record.id;
+        const total = record.bytes;
+        let offset = 0;
+        const chunks = async function* () {
+          let current = item;
+          for (;;) {
+            exactKeys(current.record, ['type', 'id', 'bytes', 'offset', 'data', 'final'], 'media chunk');
+            const part = current.record;
+            if (part.type !== 'media' || part.id !== id || part.bytes !== total || part.offset !== offset ||
+                !/^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$/.test(part.data)) {
+              fail('invalid media chunk sequence');
+            }
+            const bytes = Buffer.from(part.data, 'base64');
+            if (bytes.toString('base64') !== part.data || offset + bytes.length > total ||
+                part.final !== (offset + bytes.length === total) || bytes.length > MEDIA_CHUNK_BYTES) fail('invalid media chunk length');
+            account(current.line);
+            offset += bytes.length;
+            yield bytes;
+            if (part.final) break;
+            const next = await read();
+            if (!next || next.record.type !== 'media') fail('truncated media object');
+            current = next;
+          }
+        };
+        await mediaStore.importStream(chunks(), { id, bytes: total });
+        if (offset !== total) fail('media object length mismatch');
+        mediaObjects++;
+        mediaBytes += total;
+        if (!Number.isSafeInteger(mediaBytes)) fail('media archive exceeds the supported byte count');
+        continue;
+      }
+      if (mediaStarted) fail('database rows cannot follow media objects');
       exactKeys(record, ['type', 'table', 'row'], 'record');
       if (record.type !== 'row' || typeof record.table !== 'string' || !Object.hasOwn(SCHEMA, record.table)) {
         fail('illegal record/table');
@@ -370,7 +478,7 @@ async function loadArchive(path, store) {
       if (records % 128 === 0) await yieldTurn();
     }
   });
-  if (!header || !footer) fail('incomplete archive: missing header/footer');
+  if (header === undefined || !footer) fail('incomplete archive: missing header/footer');
   return counts;
 }
 
@@ -383,13 +491,15 @@ export async function importVault(sourcePath, vaultParent) {
   mkdirSync(parent, { recursive: true });
   const temporary = mkdtempSync(join(parent, '.fame-import-'));
   const databasePath = join(temporary, 'memory.sqlite');
+  const mediaStore = new MediaStore(temporary);
   let store;
   try {
     store = new MemoryStore(databasePath);
     validateSchema(store.db);
     store.db.exec('BEGIN IMMEDIATE');
-    const counts = await loadArchive(resolve(sourcePath), store);
+    const counts = await loadArchive(resolve(sourcePath), store, mediaStore);
     validateReferences(store.db);
+    await validateMediaReferences(store.db, mediaStore);
     store.db.exec('COMMIT');
     store.rebuildIndex();
     store.db.exec('PRAGMA wal_checkpoint(TRUNCATE)');

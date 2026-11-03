@@ -12,8 +12,12 @@ export function textOf(message) {
   return (message?.content ?? []).filter(block => block.type === 'text').map(block => block.text).join('\n');
 }
 
-export function userMessage(text) {
-  return createUserMessage({ source: { kind: 'user' }, content: [{ type: 'text', text }] });
+export function userMessage(text, blocks = [], mediaRefs = []) {
+  const content = [];
+  if (text) content.push({ type: 'text', text });
+  content.push(...blocks);
+  if (!content.length) throw adapterError('INVALID_INPUT', 'A message needs text or an attachment');
+  return createUserMessage({ source: { kind: 'user', ...(mediaRefs.length ? { fameMedia: structuredClone(mediaRefs) } : {}) }, content });
 }
 
 export function memoryMessage(text, sessionId, generation, purpose = 'recall') {
@@ -34,8 +38,8 @@ export function validateSeed(id, seed, projections = []) {
   detached.deriveMessages();
 }
 
-// Bootstrap only: 0.2.1-rc.2 does not publish constructor seeds on session/event.
-// Its deprecated snapshot API is confined to this compatibility boundary.
+// Bootstrap seeds are not republished through session/event. Keep the snapshot
+// read confined to this compatibility boundary.
 export function bootstrapEvents(session) {
   return session.snapshotEvents();
 }

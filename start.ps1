@@ -2,7 +2,20 @@ param([int]$Port = 5196, [string]$MemoryRoot, [string]$Patch)
 $ErrorActionPreference = 'Stop'
 $ProjectRoot = $PSScriptRoot
 $BundledRuntime = Join-Path $ProjectRoot 'runtime'
-$DshRoot = if (Test-Path -LiteralPath (Join-Path $BundledRuntime 'node\node.exe')) { $BundledRuntime } else { 'D:\AI\DeepSeekHarness' }
+$Profile = Join-Path $BundledRuntime 'dsh\profiles\fame-memory'
+$InstalledDsh = if (Test-Path -LiteralPath (Join-Path $BundledRuntime 'app\node_modules\@deepseek-ai\dsh\package.json')) {
+  (Get-Content -LiteralPath (Join-Path $BundledRuntime 'app\node_modules\@deepseek-ai\dsh\package.json') -Raw | ConvertFrom-Json).version
+} else { $null }
+$InstalledCompanion = if (Test-Path -LiteralPath (Join-Path $Profile 'node_modules\dsh-dafeiyu\package.json')) {
+  (Get-Content -LiteralPath (Join-Path $Profile 'node_modules\dsh-dafeiyu\package.json') -Raw | ConvertFrom-Json).version
+} else { $null }
+if (-not (Test-Path -LiteralPath (Join-Path $BundledRuntime 'node\node.exe')) -or
+    $InstalledDsh -ne '0.2.2-alpha.3' -or
+    $InstalledCompanion -ne '0.1.23' -or
+    -not (Test-Path -LiteralPath (Join-Path $BundledRuntime 'app\node_modules\@deepseek-ai\dsh\lib\bin.js'))) {
+  & (Join-Path $ProjectRoot 'scripts\setup-runtime.ps1')
+}
+$DshRoot = $BundledRuntime
 $env:BIGFISH_DSH_ROOT = $DshRoot
 $env:BIGFISH_PLUGIN_PATH = (Join-Path $ProjectRoot 'src\plugin.mjs').Replace('\', '/')
 $env:DSH_HOME = Join-Path $ProjectRoot 'runtime\dsh'

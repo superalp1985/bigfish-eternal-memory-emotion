@@ -26,7 +26,9 @@
         <form id="composer">
           <label class="sr-only" for="message">消息</label>
           <textarea id="message" placeholder="和大肥鱼说说话" rows="2" maxlength="32000"></textarea>
-          <div class="compose-bottom"><span id="activity" role="status"></span><button type="submit" class="primary" id="send" disabled>发送</button></div>
+          <div id="draft-media" class="draft-media"></div>
+          <div class="compose-bottom"><div class="compose-tools"><button type="button" id="attach" class="icon-button" title="添加图片、音频、视频或文件" aria-label="添加素材">＋</button><span id="activity" role="status"></span></div><button type="submit" class="primary" id="send" disabled>发送</button></div>
+          <input id="media-picker" type="file" multiple hidden>
         </form>
       </section>
     </main>

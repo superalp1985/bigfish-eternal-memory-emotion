@@ -17,13 +17,13 @@ export function runPowerShell(script, args = []) {
 }
 
 export async function createPortable(store, directory, options = {}) {
-  const dsh = options.dshRoot ?? process.env.BIGFISH_DSH_ROOT ?? 'D:/AI/DeepSeekHarness';
+  const dsh = options.dshRoot ?? process.env.BIGFISH_DSH_ROOT ?? join(project, 'runtime');
   await mkdir(directory, { recursive: true });
   const stage = await mkdtemp(join(directory, '.packing-'));
   const name = `BigFish-Memory-${new Date().toISOString().replace(/[:.]/g, '-')}.zip`;
   const destination = join(directory, name);
   try {
-    await exportVault(store, join(stage, 'memory.fame.gz'));
+    await exportVault(store, join(stage, 'memory.fame.gz'), { mediaStore: options.mediaStore });
     const entries = [
       ...['src', 'public', 'scripts', 'config', 'docs', 'start.ps1', 'start-background.ps1', 'background-runner.ps1',
         'install.ps1', 'Install.cmd', 'README.md', 'FAME_REFERENCE.md', 'package.json']

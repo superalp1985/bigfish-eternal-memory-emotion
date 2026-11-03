@@ -1,7 +1,7 @@
 # BigFish Eternal Memory & Emotion
 
-Permanent conversation memories and emotional states for BigFish.
-Includes `dsh-dafeiyu@0.1.23`, with DSH `0.2.1-rc.2`.
+Permanent conversation memories, emotional states and original multimodal files for BigFish.
+Includes `dsh-dafeiyu@0.1.23`, with a project-private DSH `0.2.2-alpha.3`.
 
 ## Launch
 
@@ -28,7 +28,8 @@ Only the small automatic-start shortcut uses the Windows Startup folder.
   through public lifecycle APIs. It does not overwrite Agent source code.
 - A working generation contains the summary and a bounded recent tail.
   The same logical/native session ID is used across working generations.
-- Defaults are 600 events / 64000 characters, with at most 4 loaded sessions.
+- Defaults are 2400 events / 256000 characters, a 64000-character recent tail,
+  24000 characters of recall, a 32000-character summary, and at most 8 loaded sessions.
   Idle LRU unloading releases other sessions. One turn can temporarily exceed
   its budget; failed compaction blocks further input until reduction succeeds.
 - The canonical archive is the plugin database. Generation-local DSH sequence
@@ -39,9 +40,14 @@ Only the small automatic-start shortcut uses the Windows Startup folder.
 - The original DSH Web controller owns its own agents. This plugin does not
   silently seize or compact their internal objects; use the BigFish panel's
   managed conversation entry.
-- Current transfer covers text history, raw event JSON, memories, graph records,
-  FAME state and checkpoints. External file/image bytes are not bundled.
-  This is a text-conversation release, not an attachment migration utility.
+- Images, audio, video and arbitrary files are first committed byte-for-byte to a
+  SHA-256 content-addressed archive beside the vault. Session events keep immutable
+  media metadata so restart and migration can rebuild DSH attachment references.
+- DSH normalizes the image copy used for model requests. BigFish keeps the original
+  submitted bytes independently. File/audio/video preservation does not imply that
+  the selected model can understand those formats.
+- No automatic archive expiry or media deletion runs. Available disk space is the
+  practical durable-storage limit; active model context remains bounded.
 
 ## Unified FAME semantics
 
@@ -74,7 +80,7 @@ observation metadata is kept out of the companion's normal conversation.
 
 Click **一键打包带走**. The program creates a ZIP under the selected memory folder's
 `transfers` directory and reveals it in Explorer. It contains the conversation,
-emotional states, program, Node, DSH and the BigFish companion, with upstream licenses.
+emotional states, every referenced original media object, program, Node, DSH and the BigFish companion, with upstream licenses.
 Extract it on the destination computer and run `Install.cmd`. Installation restores
 the archive and continues the same conversation automatically.
 
@@ -87,7 +93,9 @@ Backups are compressed, not encrypted. Keep the file private or put it in your
 own encrypted storage. File hashes detect corruption, not a malicious author
 who rebuilds a valid archive. Imported memory is treated as data, never executed.
 Never copy only a live `.sqlite` file without its WAL; use the backup button.
-The standalone `.fame.gz` backup carries memories and emotional states; the ZIP
+The standalone `.fame.gz` backup carries memories, emotional states and media in
+bounded base64 chunks. The whole archive and every media object are SHA-256 checked.
+Version 1 text-only backups remain importable. The ZIP
 also carries runtime files. Neither includes API credentials or original host
 profile data.
 

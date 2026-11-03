@@ -1,6 +1,6 @@
 {
   "name": "bigfish-eternal-memory-emotion",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "type": "module",
   "main": "src/plugin.mjs",
@@ -15,5 +15,5 @@
     "start": "node src/server.mjs",
     "test:dsh": "node --expose-gc --test tests/dsh.integration.mjs"
   },
-  "engines": { "node": ">=24.2", "dsh": "=0.2.1-rc.2" }
+  "engines": { "node": ">=24.9", "dsh": "=0.2.2-alpha.3" }
 }

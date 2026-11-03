@@ -1,6 +1,7 @@
 const $ = id => document.getElementById(id);
 const dimensions = [['mu','满足'],['chi','好奇'],['epsilon','共情'],['kappa','自信'],['nu','焦虑'],['delta','冲突'],['rho','疲劳'],['lambda','失落']];
 let token, connected = false, selected = null, current = null, busy = false, earliest = null, loadingHistory = false, hasOlder = false;
+let draftMedia = [];
 let noticeTimer, initialized = false;
 function notice(text) {
   $('toast').textContent = text; $('toast').hidden = false; clearTimeout(noticeTimer);
@@ -25,6 +26,7 @@ function element(tag, text, className) {
 function setBusy(value, text = '') {
   busy = value; $('activity').textContent = text;
   $('send').disabled = value || !connected || !selected;
+  $('attach').disabled = value || !connected || !selected;
   $('pack').disabled = value; $('storage').disabled = value;
 }
 function fame() {
@@ -47,7 +49,24 @@ function transcript(rows, prepend = false) {
   const nodes = rows.map(row => {
     const actor = row.type === 'assistant/message' ? 'assistant' : 'user';
     const node = element('article', undefined, 'message ' + actor);
-    node.append(element('div', actor === 'assistant' ? '大肥鱼' : '你', 'who'), element('p', row.text));
+    node.append(element('div', actor === 'assistant' ? '大肥鱼' : '你', 'who'));
+    const attachments = row.attachments ?? [];
+    const onlyPlaceholder = attachments.length && /^\[(?:image|file): .+, \d+ bytes\](?:\n\[(?:image|file): .+, \d+ bytes\])*$/.test(row.text);
+    if (row.text && !onlyPlaceholder) node.append(element('p', row.text));
+    if (attachments.length) {
+      const media = element('div', undefined, 'message-media');
+      for (const ref of attachments) {
+        const href = '/api/media?' + new URLSearchParams({ id: ref.id, bytes: String(ref.bytes), type: ref.mediaType, name: ref.name });
+        if (ref.kind === 'image') {
+          const link = document.createElement('a'); link.href = href; link.target = '_blank';
+          const image = document.createElement('img'); image.src = href; image.alt = ref.name; image.loading = 'lazy';
+          link.append(image); media.append(link);
+        } else {
+          const link = element('a', ref.name, 'file-link'); link.href = href; link.setAttribute('download', ref.name); media.append(link);
+        }
+      }
+      node.append(media);
+    }
     return node;
   });
   if (prepend) target.prepend(...nodes); else target.append(...nodes);
@@ -55,6 +74,24 @@ function transcript(rows, prepend = false) {
   while (target.querySelectorAll('.message').length > 150) target.querySelector('.message:last-of-type').remove();
   earliest = rows[0]?.cursor; hasOlder = rows.length === 50;
   target.scrollTop = prepend ? Math.max(1, target.scrollHeight - height) : target.scrollHeight;
+}
+function renderDraftMedia() {
+  const target = $('draft-media'); target.replaceChildren();
+  for (const [index, ref] of draftMedia.entries()) {
+    const item = element('div', undefined, 'draft-item');
+    item.append(element('span', `${ref.name} · ${Math.max(1, Math.ceil(ref.bytes / 1024))} KB`));
+    const remove = element('button', '×', 'remove-media'); remove.type = 'button'; remove.title = '从本条消息移除';
+    remove.onclick = () => { draftMedia.splice(index, 1); renderDraftMedia(); };
+    item.append(remove); target.append(item);
+  }
+}
+async function uploadMedia(file) {
+  const response = await fetch('/api/media?name=' + encodeURIComponent(file.name), {
+    method: 'POST', headers: { 'x-fame-token': token, 'content-type': file.type || 'application/octet-stream' }, body: file,
+  });
+  const value = await response.json();
+  if (!response.ok) throw new Error(value.error || '素材保存失败');
+  return value;
 }
 async function refresh(id, messages = true) {
   current = await api('session?id=' + encodeURIComponent(id));
@@ -93,11 +130,11 @@ async function connect() {
 $('composer').onsubmit = async event => {
   event.preventDefault();
   const text = $('message').value.trim();
-  if (!text || busy || !selected) return;
+  if ((!text && !draftMedia.length) || busy || !selected) return;
   setBusy(true, '正在回复');
   try {
     for (;;) {
-      try { await api('send', { id: selected, text }); break; }
+      try { await api('send', { id: selected, text, attachments: draftMedia }); break; }
       catch (error) {
         if (error.code !== 'MAINTENANCE_PENDING') throw error;
         $('activity').textContent = '正在接续记忆';
@@ -105,11 +142,26 @@ $('composer').onsubmit = async event => {
       }
     }
     $('message').value = '';
+    draftMedia = []; renderDraftMedia();
     await refresh(selected);
   } catch (error) {
-    if (error.saved) $('message').value = '';
+    if (error.saved) { $('message').value = ''; draftMedia = []; renderDraftMedia(); }
     notice(error.saved ? '对话已保存' : error.message);
   } finally { setBusy(false); }
+};
+$('attach').onclick = () => $('media-picker').click();
+$('media-picker').onchange = async () => {
+  const files = [...$('media-picker').files]; $('media-picker').value = '';
+  if (!files.length) return;
+  if (draftMedia.length + files.length > 20) return notice('每条消息最多 20 个素材');
+  setBusy(true, '正在永久保存素材');
+  try {
+    for (const file of files) {
+      draftMedia.push(await uploadMedia(file));
+      renderDraftMedia();
+    }
+  } catch (error) { notice(error.message); }
+  finally { setBusy(false); }
 };
 $('transcript').onscroll = async () => {
   if (!selected || busy || loadingHistory || !hasOlder || $('transcript').scrollTop > 40) return;

@@ -33,3 +33,9 @@
         provider: deepseek-official
         model: deepseek-flash
         maxTokens: 4096
+        maxActiveEvents: 2400
+        maxActiveChars: 256000
+        recentChars: 64000
+        recallChars: 24000
+        summaryChars: 32000
+        maxLoadedSessions: 8

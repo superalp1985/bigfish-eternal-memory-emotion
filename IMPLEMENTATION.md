@@ -12,10 +12,14 @@ Avoid Agent implementation changes. All data and experiments live on E:.
 - [x] Plugin integration, automatic memory capture and compaction lifecycle.
 - [x] Real DSH integration, long-log, recovery and browser tests.
 - [x] Install isolated profile and document supported paths and limitations.
+- [x] Preserve original image, audio, video and file bytes with message references.
+- [x] Stream media through backup, storage moves and portable recovery.
+- [x] Align the project-private runtime to DSH 0.2.2-alpha.3.
 
 ## Invariants
 
 - Raw history is immutable and never truncated by summarization.
+- Referenced media is immutable, content-addressed and never removed automatically.
 - A working generation is bounded and distinguishable from the canonical archive.
 - Runtime seq is generation-local; permanent references include generation.
 - Flush and validate the successor before releasing an old working generation.
@@ -25,6 +29,6 @@ Avoid Agent implementation changes. All data and experiments live on E:.
 - All graph nodes, edges, routes and participants use the paper's SAME eight
   FAME meanings. Legacy gateway engineering meanings are not converted silently.
   Operational scores live under routing_metrics, never redefine FAME dimensions.
-- Portable backups contain memory only, not API keys or machine configuration.
+- Portable backups contain memory and all referenced media, not API keys or machine configuration.
 - Imports create a separate vault; never overwrite an existing vault.
 - No claim of mathematically infinite conversations or perfect recall.

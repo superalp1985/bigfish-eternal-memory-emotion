@@ -2,14 +2,7 @@ param([switch]$Bundled)
 $ErrorActionPreference = 'Stop'
 $ProjectRoot = Split-Path -Parent $PSScriptRoot
 $Runtime = Join-Path $ProjectRoot 'runtime'
-$Legacy = 'D:\AI\DeepSeekHarness'
-$DshRoot = if ((Test-Path -LiteralPath (Join-Path $Runtime 'node\node.exe')) -or $Bundled) {
-  $Runtime
-} elseif (Test-Path -LiteralPath (Join-Path $Legacy 'node\node.exe')) {
-  $Legacy
-} else {
-  $Runtime
-}
+$DshRoot = $Runtime
 New-Item -ItemType Directory -Path $Runtime -Force | Out-Null
 $env:TEMP = Join-Path $Runtime 'tmp'
 $env:TMP = $env:TEMP
@@ -50,12 +43,14 @@ if (-not (Test-Path -LiteralPath $Node)) {
 $env:PATH = (Join-Path $DshRoot 'node') + ';' + $env:PATH
 $Npm = Join-Path $DshRoot 'node\node_modules\npm\bin\npm-cli.js'
 $Cli = Join-Path $DshRoot 'app\node_modules\@deepseek-ai\dsh\lib\bin.js'
-if (-not (Test-Path -LiteralPath $Cli)) {
-  if ($DshRoot -ne $Runtime) { throw 'The existing DSH runtime is incomplete. Run scripts\setup-runtime.ps1 -Bundled.' }
-  Write-Host 'Installing DeepSeek Harness 0.2.1-rc.2...'
+$InstalledVersion = if (Test-Path -LiteralPath (Join-Path $DshRoot 'app\node_modules\@deepseek-ai\dsh\package.json')) {
+  (Get-Content -LiteralPath (Join-Path $DshRoot 'app\node_modules\@deepseek-ai\dsh\package.json') -Raw | ConvertFrom-Json).version
+} else { $null }
+if (-not (Test-Path -LiteralPath $Cli) -or $InstalledVersion -ne '0.2.2-alpha.3') {
+  Write-Host 'Installing the project-private DeepSeek Harness 0.2.2-alpha.3...'
   $App = Join-Path $Runtime 'app'
   New-Item -ItemType Directory -Path $App -Force | Out-Null
-  Copy-Item -LiteralPath (Join-Path $ProjectRoot 'config\runtime-package.json') -Destination (Join-Path $App 'package.json')
+  Copy-Item -LiteralPath (Join-Path $ProjectRoot 'config\runtime-package.json') -Destination (Join-Path $App 'package.json') -Force
   & $Node $Npm install --prefix $App --omit=dev --no-audit --no-fund | Out-Host
   if ($LASTEXITCODE -ne 0) { throw 'DSH installation failed. Run Install.cmd again to retry.' }
 }
@@ -63,18 +58,29 @@ $Profile = Join-Path $Runtime 'dsh\profiles\fame-memory'
 New-Item -ItemType Directory -Path $Profile -Force | Out-Null
 foreach ($Name in @('package.json', 'cordis.patch.yml')) {
   $Destination = Join-Path $Profile $Name
-  if (-not (Test-Path -LiteralPath $Destination)) {
-    Copy-Item -LiteralPath (Join-Path $ProjectRoot "config\profile\$Name") -Destination $Destination
-  }
+  Copy-Item -LiteralPath (Join-Path $ProjectRoot "config\profile\$Name") -Destination $Destination -Force
 }
-if (-not (Test-Path -LiteralPath (Join-Path $Profile 'node_modules\dsh-dafeiyu\package.json'))) {
+$CompanionVersion = if (Test-Path -LiteralPath (Join-Path $Profile 'node_modules\dsh-dafeiyu\package.json')) {
+  (Get-Content -LiteralPath (Join-Path $Profile 'node_modules\dsh-dafeiyu\package.json') -Raw | ConvertFrom-Json).version
+} else { $null }
+if ($CompanionVersion -ne '0.1.23') {
   Write-Host 'Installing the BigFish companion...'
   & $Node $Npm install --prefix $Profile --omit=dev --no-audit --no-fund | Out-Host
   if ($LASTEXITCODE -ne 0) { throw 'Companion installation failed. Run Install.cmd again to retry.' }
 }
 $Modules = Join-Path $ProjectRoot 'node_modules'
+$DesiredModules = Join-Path $DshRoot 'app\node_modules'
+if (Test-Path -LiteralPath $Modules) {
+  $Item = Get-Item -LiteralPath $Modules -Force
+  if (-not ($Item.Attributes -band [IO.FileAttributes]::ReparsePoint)) {
+    throw 'Project node_modules exists but is not the managed runtime link. Move it aside and rerun Install.cmd.'
+  }
+  if ([IO.Path]::GetFullPath([string]$Item.Target) -ne [IO.Path]::GetFullPath($DesiredModules)) {
+    Remove-Item -LiteralPath $Modules -Force
+  }
+}
 if (-not (Test-Path -LiteralPath $Modules)) {
-  New-Item -ItemType Junction -Path $Modules -Target (Join-Path $DshRoot 'app\node_modules') | Out-Null
+  New-Item -ItemType Junction -Path $Modules -Target $DesiredModules | Out-Null
 }
 $Plugin = Join-Path $Profile 'node_modules\bigfish-eternal-memory-emotion'
 if (-not (Test-Path -LiteralPath $Plugin)) {

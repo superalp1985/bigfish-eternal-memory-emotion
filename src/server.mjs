@@ -11,6 +11,7 @@ import { exportVault, importVault } from './backup.mjs';
 import { createOverlay } from './knowledge-overlay.mjs';
 import { createPortable, chooseStorage, revealFile } from './portable.mjs';
 import { createMaintenance } from './maintenance.mjs';
+import { MediaStore } from './media-store.mjs';
 
 const publicRoot = resolve(import.meta.dirname, '../public');
 const json = (res, status, value) => {
@@ -44,7 +45,8 @@ export async function createMemoryServer({ root, port = 5196, adapterFactory, st
   let vaultName = existsSync(pointerPath) ? JSON.parse(readFileSync(pointerPath, 'utf8')).name : 'primary';
   if (!/^[a-zA-Z0-9_-]+$/.test(vaultName)) throw new Error('Invalid active vault pointer');
   let store = suppliedStore ?? new MemoryStore(join(vaultRoot, vaultName, 'memory.sqlite'));
-  let adapter = adapterFactory ? await adapterFactory(store) : null;
+  let mediaStore = new MediaStore(dirname(store.path));
+  let adapter = adapterFactory ? await adapterFactory(store, mediaStore) : null;
   let maintenance = createMaintenance(store, adapter);
   let switching = false;
   let activeRequests = 0;
@@ -63,7 +65,7 @@ export async function createMemoryServer({ root, port = 5196, adapterFactory, st
       if (u.pathname === '/api/bootstrap' && req.method === 'GET') {
         if (req.headers['sec-fetch-site'] === 'cross-site') return json(res, 403, { error: 'Invalid site' });
         res.setHeader('set-cookie', `fame_session=${cookie}; HttpOnly; SameSite=Strict; Path=/`);
-        return json(res, 200, { token, connected: !!adapter, vault: vaultName, root, backend: 'DSH 0.2.1-rc.2', product: 'BigFish Eternal Memory & Emotion', project: resolve(import.meta.dirname, '..') });
+        return json(res, 200, { token, connected: !!adapter, vault: vaultName, root, backend: 'DSH 0.2.2-alpha.3', product: 'BigFish Eternal Memory & Emotion', project: resolve(import.meta.dirname, '..') });
       }
       if (!u.pathname.startsWith('/api/')) {
         const routes = { '/': 'index.html', '/app.js': 'app.js', '/style.css': 'style.css', '/icon.svg': 'icon.svg', '/bigfish.webp': 'bigfish.webp' };
@@ -90,13 +92,38 @@ export async function createMemoryServer({ root, port = 5196, adapterFactory, st
           snapshot: store.snapshot(id), maintaining: maintenance.pending(id),
         });
       }
+      if (u.pathname === '/api/media' && req.method === 'POST') {
+        const name = u.searchParams.get('name') ?? 'attachment';
+        const mediaType = (req.headers['content-type'] ?? 'application/octet-stream').split(';', 1)[0].trim().toLowerCase();
+        const kind = ['image/png', 'image/jpeg', 'image/webp', 'image/gif'].includes(mediaType) ? 'image' : 'file';
+        const ref = await mediaStore.putStream(req, { name, mediaType, kind });
+        return json(res, 200, ref);
+      }
+      if (u.pathname === '/api/media' && req.method === 'GET') {
+        const id = u.searchParams.get('id') ?? '';
+        const ref = { id, bytes: Number(u.searchParams.get('bytes')) };
+        await mediaStore.verify(ref);
+        const mediaType = u.searchParams.get('type') ?? 'application/octet-stream';
+        if (!/^[\w.+-]+\/[\w.+-]+$/.test(mediaType)) throw new Error('Invalid media type');
+        const name = u.searchParams.get('name') ?? 'attachment';
+        const inline = ['image/png', 'image/jpeg', 'image/webp', 'image/gif'].includes(mediaType);
+        const fallbackName = name.replace(/[^\x20-\x7e]|["\\]/g, '_').slice(0, 120) || 'attachment';
+        res.writeHead(200, {
+          'content-type': mediaType,
+          'content-length': String(ref.bytes),
+          'content-disposition': `${inline ? 'inline' : 'attachment'}; filename="${fallbackName}"; filename*=UTF-8''${encodeURIComponent(name)}`,
+          'cache-control': 'private, max-age=31536000, immutable',
+        });
+        return await pipeline(mediaStore.readStream(ref), res);
+      }
       if (u.pathname === '/api/send' && req.method === 'POST') {
         if (!adapter) return json(res, 503, { error: 'DSH 未连接。请使用 DSH 记忆插件启动器。' });
         const input = await body(req);
-        if (typeof input.text !== 'string' || !input.text.trim() || input.text.length > 32000) throw new Error('消息须为 1–32000 字符');
+        if (typeof input.text !== 'string' || input.text.length > 32000 || !input.text.trim() && !input.attachments?.length) throw new Error('消息须包含文字或素材，文字最多 32000 字符');
+        if (input.attachments !== undefined && (!Array.isArray(input.attachments) || input.attachments.length > 20)) throw new Error('每条消息最多包含 20 个素材');
         await maintenance.ensure(input.id);
         try {
-          const reply = await adapter.send(input.id, input.text);
+          const reply = await adapter.send(input.id, input.text, input.attachments ?? []);
           return json(res, 200, { reply });
         } catch (error) {
           if (!error.saved || !['ANNOTATION_FAILED', 'COMPACTION_FAILED'].includes(error.code)) throw error;
@@ -141,7 +168,7 @@ export async function createMemoryServer({ root, port = 5196, adapterFactory, st
       }
       if (u.pathname === '/api/backup' && req.method === 'POST') {
         const name = `fame-${new Date().toISOString().replace(/[:.]/g, '-')}-${randomBytes(3).toString('hex')}.fame.gz`;
-        await exportVault(store, join(backupRoot, name));
+        await exportVault(store, join(backupRoot, name), { mediaStore });
         return json(res, 200, { name });
       }
       if (u.pathname === '/api/portable' && req.method === 'POST') {
@@ -150,7 +177,7 @@ export async function createMemoryServer({ root, port = 5196, adapterFactory, st
         try {
           for (const session of store.listSessions()) await maintenance.ensure(session.id);
           await maintenance.pause();
-          const bundle = await portableFactory(store, join(root, 'transfers'));
+          const bundle = await portableFactory(store, join(root, 'transfers'), { mediaStore });
           reveal?.(bundle.path);
           return json(res, 200, bundle);
         } finally { maintenance.resume(); switching = false; }
@@ -171,21 +198,22 @@ export async function createMemoryServer({ root, port = 5196, adapterFactory, st
           await maintenance.pause();
           mkdirSync(target, { recursive: true });
           const pack = join(target, 'memory-transfer.fame.gz');
-          await exportVault(store, pack);
+          await exportVault(store, pack, { mediaStore });
           const imported = await importVault(pack, join(target, 'vaults'));
           nextStore = new MemoryStore(imported.path);
+          const nextMediaStore = new MediaStore(dirname(nextStore.path));
           const nextName = basename(imported.root);
           for (const folder of ['backups', 'uploads']) mkdirSync(join(target, folder), { recursive: true });
           writeFileSync(join(target, 'active-vault.json'), JSON.stringify({ name: nextName }), { flush: true });
           previousClosed = true;
           await adapter?.close();
-          nextAdapter = adapterFactory ? await adapterFactory(nextStore) : null;
+          nextAdapter = adapterFactory ? await adapterFactory(nextStore, nextMediaStore) : null;
           mkdirSync(dirname(storageConfigPath), { recursive: true });
           writeFileSync(storageConfigPath + '.tmp', JSON.stringify({ root: target }), { flush: true });
           renameSync(storageConfigPath + '.tmp', storageConfigPath);
           await maintenance.close();
           const previous = store;
-          store = nextStore; adapter = nextAdapter;
+          store = nextStore; adapter = nextAdapter; mediaStore = nextMediaStore;
           nextStore = null; nextAdapter = null; previousClosed = false;
           root = target; vaultName = nextName;
           backupRoot = join(root, 'backups'); uploadRoot = join(root, 'uploads');
@@ -199,7 +227,7 @@ export async function createMemoryServer({ root, port = 5196, adapterFactory, st
           try { nextStore?.close(); } catch (cleanupError) { failures.push(cleanupError); }
           if (previousClosed) {
             adapter = null;
-            try { adapter = adapterFactory ? await adapterFactory(store) : null; }
+            try { adapter = adapterFactory ? await adapterFactory(store, mediaStore) : null; }
             catch (recoveryError) { failures.push(recoveryError); }
             await maintenance.close();
             maintenance = createMaintenance(store, adapter);
@@ -230,11 +258,12 @@ export async function createMemoryServer({ root, port = 5196, adapterFactory, st
           const nextName = basename(imported.root);
           if (!/^[a-zA-Z0-9_-]+$/.test(nextName)) throw new Error('Invalid imported vault name');
           const nextStore = new MemoryStore(imported.path);
+          const nextMediaStore = new MediaStore(dirname(nextStore.path));
           let nextAdapter = null, oldClosed = false;
           try {
             oldClosed = true;
             await adapter?.close();
-            nextAdapter = adapterFactory ? await adapterFactory(nextStore) : null;
+            nextAdapter = adapterFactory ? await adapterFactory(nextStore, nextMediaStore) : null;
             writeFileSync(`${pointerPath}.tmp`, JSON.stringify({ name: nextName }), { flush: true });
             renameSync(`${pointerPath}.tmp`, pointerPath);
           } catch (error) {
@@ -243,14 +272,14 @@ export async function createMemoryServer({ root, port = 5196, adapterFactory, st
             try { nextStore.close(); } catch (cleanupError) { failures.push(cleanupError); }
             if (oldClosed) {
               adapter = null;
-              try { adapter = adapterFactory ? await adapterFactory(store) : null; }
+              try { adapter = adapterFactory ? await adapterFactory(store, mediaStore) : null; }
               catch (recoveryError) { failures.push(recoveryError); }
             }
             throw failures.length > 1 ? new Error(failures.map(failure => failure.message).join('; ')) : error;
           }
           const previousStore = store;
           await maintenance.close();
-          store = nextStore; adapter = nextAdapter; vaultName = nextName;
+          store = nextStore; adapter = nextAdapter; mediaStore = nextMediaStore; vaultName = nextName;
           maintenance = createMaintenance(store, adapter);
           previousStore.close();
           return json(res, 200, { vault: vaultName, sessions: imported.sessions });
