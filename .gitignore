@@ -1,0 +1,14 @@
+node_modules/
+data/
+work/
+runtime/
+tests/.*/
+*.log
+*.sqlite*
+*.fame.gz
+transfer/
+dist/
+.env
+.env.*
+credential*
+*01a1a110-d775-7772-894f-6352b00ad5da*

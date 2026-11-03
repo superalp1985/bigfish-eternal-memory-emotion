@@ -1,0 +1,19 @@
+{
+  "name": "bigfish-eternal-memory-emotion",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "src/plugin.mjs",
+  "exports": { ".": "./src/plugin.mjs" },
+  "description": "Persistent memories and emotions for BigFish, with automatic context compaction, long-session recall, and one-click backup and migration.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/superalp1985/bigfish-eternal-memory-emotion.git"
+  },
+  "scripts": {
+    "test": "node --test tests/*.test.mjs",
+    "start": "node src/server.mjs",
+    "test:dsh": "node --expose-gc --test tests/dsh.integration.mjs"
+  },
+  "engines": { "node": ">=24.2", "dsh": "=0.2.1-rc.2" }
+}

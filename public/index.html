@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>BigFish Eternal Memory &amp; Emotion</title>
+  <link rel="icon" href="/bigfish.webp">
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <header>
+    <a class="brand" href="/"><img src="/bigfish.webp" alt="" width="42" height="36"><strong>BigFish <span>Eternal Memory &amp; Emotion</span></strong></a>
+    <div class="connection"><i id="indicator"></i><span id="connection">正在连接</span></div>
+    <button id="pack">一键打包带走</button>
+  </header>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="side-title">我们的对话</div>
+      <div id="sessions" class="sessions"></div>
+      <div class="vault"><span>保存位置</span><small id="data-path"></small><button id="storage">更换位置</button></div>
+    </aside>
+    <main>
+      <div class="toolbar"><div><h1 id="title">大肥鱼</h1><span id="stats" class="muted">记忆和情感</span></div></div>
+      <section id="chat" class="tab-panel">
+        <div id="transcript" class="transcript"><div class="empty">我们接着聊。</div></div>
+        <form id="composer">
+          <label class="sr-only" for="message">消息</label>
+          <textarea id="message" placeholder="和大肥鱼说说话" rows="2" maxlength="32000"></textarea>
+          <div class="compose-bottom"><span id="activity" role="status"></span><button type="submit" class="primary" id="send" disabled>发送</button></div>
+        </form>
+      </section>
+    </main>
+    <aside class="state-panel">
+      <div class="side-title">情感状态</div>
+      <div class="actor-title">你 <span id="user-method">未记录</span></div><div id="user-fame"></div>
+      <div class="actor-title agent-label">大肥鱼 <span id="agent-method">未记录</span></div><div id="agent-fame"></div>
+      <div class="state-footer"><span>记忆</span><strong id="memory-count">0</strong><span>情感</span><strong id="emotion-status">待续</strong></div>
+    </aside>
+  </div>
+  <div id="toast" role="status" hidden></div>
+  <script type="module" src="/app.js"></script>
+</body>
+</html>

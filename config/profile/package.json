@@ -1,0 +1,12 @@
+{
+  "name": "bigfish-memory-profile",
+  "private": true,
+  "dsh": {
+    "profile": {
+      "bundles": ["@deepseek-ai/dsh-base", "dsh-dafeiyu"]
+    }
+  },
+  "dependencies": {
+    "dsh-dafeiyu": "0.1.23"
+  }
+}

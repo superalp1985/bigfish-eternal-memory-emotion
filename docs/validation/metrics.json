@@ -1,0 +1,1365 @@
+{
+  "date": "2026-11-03",
+  "runtime": {
+    "node": "v24.22.1",
+    "dsh": "0.2.1-rc.2",
+    "companion": "0.1.23"
+  },
+  "limits": {
+    "maxActiveEvents": 600,
+    "maxActiveChars": 64000,
+    "recentChars": 16000
+  },
+  "syntheticData": true,
+  "completedTurns": 80,
+  "archivedMessages": 160,
+  "compactions": [
+    {
+      "afterTurn": 8,
+      "from": 0,
+      "to": 1,
+      "beforeEvents": 106,
+      "beforeChars": 71844,
+      "afterEvents": 30,
+      "afterChars": 15990
+    },
+    {
+      "afterTurn": 13,
+      "from": 1,
+      "to": 2,
+      "beforeEvents": 96,
+      "beforeChars": 70400,
+      "afterEvents": 30,
+      "afterChars": 14711
+    },
+    {
+      "afterTurn": 18,
+      "from": 2,
+      "to": 3,
+      "beforeEvents": 96,
+      "beforeChars": 69485,
+      "afterEvents": 30,
+      "afterChars": 15537
+    },
+    {
+      "afterTurn": 23,
+      "from": 3,
+      "to": 4,
+      "beforeEvents": 96,
+      "beforeChars": 74214,
+      "afterEvents": 30,
+      "afterChars": 15903
+    },
+    {
+      "afterTurn": 27,
+      "from": 4,
+      "to": 5,
+      "beforeEvents": 84,
+      "beforeChars": 67705,
+      "afterEvents": 24,
+      "afterChars": 15071
+    },
+    {
+      "afterTurn": 31,
+      "from": 5,
+      "to": 6,
+      "beforeEvents": 78,
+      "beforeChars": 68593,
+      "afterEvents": 24,
+      "afterChars": 14850
+    },
+    {
+      "afterTurn": 35,
+      "from": 6,
+      "to": 7,
+      "beforeEvents": 78,
+      "beforeChars": 73345,
+      "afterEvents": 24,
+      "afterChars": 14493
+    },
+    {
+      "afterTurn": 39,
+      "from": 7,
+      "to": 8,
+      "beforeEvents": 78,
+      "beforeChars": 72719,
+      "afterEvents": 24,
+      "afterChars": 15358
+    },
+    {
+      "afterTurn": 43,
+      "from": 8,
+      "to": 9,
+      "beforeEvents": 80,
+      "beforeChars": 71914,
+      "afterEvents": 25,
+      "afterChars": 14179
+    },
+    {
+      "afterTurn": 47,
+      "from": 9,
+      "to": 10,
+      "beforeEvents": 79,
+      "beforeChars": 75177,
+      "afterEvents": 24,
+      "afterChars": 18818
+    },
+    {
+      "afterTurn": 51,
+      "from": 10,
+      "to": 11,
+      "beforeEvents": 78,
+      "beforeChars": 75637,
+      "afterEvents": 24,
+      "afterChars": 14725
+    },
+    {
+      "afterTurn": 55,
+      "from": 11,
+      "to": 12,
+      "beforeEvents": 78,
+      "beforeChars": 70902,
+      "afterEvents": 24,
+      "afterChars": 14763
+    },
+    {
+      "afterTurn": 59,
+      "from": 12,
+      "to": 13,
+      "beforeEvents": 78,
+      "beforeChars": 71940,
+      "afterEvents": 33,
+      "afterChars": 20977
+    },
+    {
+      "afterTurn": 62,
+      "from": 13,
+      "to": 14,
+      "beforeEvents": 73,
+      "beforeChars": 64266,
+      "afterEvents": 31,
+      "afterChars": 20250
+    },
+    {
+      "afterTurn": 65,
+      "from": 14,
+      "to": 15,
+      "beforeEvents": 73,
+      "beforeChars": 64417,
+      "afterEvents": 27,
+      "afterChars": 18290
+    },
+    {
+      "afterTurn": 69,
+      "from": 15,
+      "to": 16,
+      "beforeEvents": 79,
+      "beforeChars": 73184,
+      "afterEvents": 31,
+      "afterChars": 19434
+    },
+    {
+      "afterTurn": 73,
+      "from": 16,
+      "to": 17,
+      "beforeEvents": 87,
+      "beforeChars": 76217,
+      "afterEvents": 25,
+      "afterChars": 16982
+    },
+    {
+      "afterTurn": 77,
+      "from": 17,
+      "to": 18,
+      "beforeEvents": 79,
+      "beforeChars": 74086,
+      "afterEvents": 24,
+      "afterChars": 15637
+    },
+    {
+      "afterTurn": 80,
+      "from": 18,
+      "to": 19,
+      "beforeEvents": 66,
+      "beforeChars": 64066,
+      "afterEvents": 18,
+      "afterChars": 15856
+    }
+  ],
+  "probes": [
+    {
+      "turn": 12,
+      "passed": true,
+      "matches": [
+        {
+          "pattern": "阿岚",
+          "matched": true
+        },
+        {
+          "pattern": "无糖白桃乌龙",
+          "matched": true
+        },
+        {
+          "pattern": "潮汐灯塔",
+          "matched": true
+        }
+      ]
+    },
+    {
+      "turn": 24,
+      "passed": true,
+      "matches": [
+        {
+          "pattern": "周四|星期四",
+          "matched": true
+        },
+        {
+          "pattern": "九点十分|9[:：]10|21[:：]10|九点十",
+          "matched": true
+        },
+        {
+          "pattern": "南窗有风",
+          "matched": true
+        },
+        {
+          "pattern": "慢慢来也算前进",
+          "matched": true
+        }
+      ]
+    },
+    {
+      "turn": 40,
+      "passed": true,
+      "matches": [
+        {
+          "pattern": "桂花红茶",
+          "matched": true
+        },
+        {
+          "pattern": "萤火长廊",
+          "matched": true
+        },
+        {
+          "pattern": "橙色便签",
+          "matched": true
+        },
+        {
+          "pattern": "墨绿",
+          "matched": true
+        }
+      ]
+    },
+    {
+      "turn": 41,
+      "passed": true,
+      "matches": [
+        {
+          "pattern": "桂花红茶",
+          "matched": true
+        },
+        {
+          "pattern": "萤火长廊",
+          "matched": true
+        },
+        {
+          "pattern": "橙色便签",
+          "matched": true
+        },
+        {
+          "pattern": "阿岚",
+          "matched": true
+        }
+      ]
+    },
+    {
+      "turn": 50,
+      "passed": true,
+      "matches": [
+        {
+          "pattern": "墨绿",
+          "matched": true
+        },
+        {
+          "pattern": "慢慢来也算前进",
+          "matched": true
+        }
+      ]
+    },
+    {
+      "turn": 55,
+      "passed": true,
+      "matches": [
+        {
+          "pattern": "周六|星期六",
+          "matched": true
+        },
+        {
+          "pattern": "九点二十|9[:：]20",
+          "matched": true
+        },
+        {
+          "pattern": "桂花红茶",
+          "matched": true
+        }
+      ]
+    },
+    {
+      "turn": 64,
+      "passed": true,
+      "matches": [
+        {
+          "pattern": "墨绿",
+          "matched": true
+        },
+        {
+          "pattern": "慢慢来也算前进",
+          "matched": true
+        },
+        {
+          "pattern": "靛蓝",
+          "matched": true
+        },
+        {
+          "pattern": "木.*纽扣|木.*钮扣",
+          "matched": true
+        }
+      ]
+    },
+    {
+      "turn": 70,
+      "passed": true,
+      "matches": [
+        {
+          "pattern": "周六|星期六",
+          "matched": true
+        },
+        {
+          "pattern": "九点二十|9[:：]20",
+          "matched": true
+        },
+        {
+          "pattern": "橙色便签",
+          "matched": true
+        },
+        {
+          "pattern": "萤火长廊",
+          "matched": true
+        }
+      ]
+    },
+    {
+      "turn": 71,
+      "passed": true,
+      "matches": [
+        {
+          "pattern": "桂花红茶",
+          "matched": true
+        },
+        {
+          "pattern": "萤火长廊",
+          "matched": true
+        },
+        {
+          "pattern": "周六|星期六",
+          "matched": true
+        },
+        {
+          "pattern": "九点二十|9[:：]20",
+          "matched": true
+        },
+        {
+          "pattern": "橙色便签",
+          "matched": true
+        }
+      ]
+    },
+    {
+      "turn": 72,
+      "passed": true,
+      "matches": [
+        {
+          "pattern": "手账",
+          "matched": true
+        },
+        {
+          "pattern": "墨绿",
+          "matched": true
+        },
+        {
+          "pattern": "慢慢来也算前进",
+          "matched": true
+        }
+      ]
+    },
+    {
+      "turn": 78,
+      "passed": true,
+      "matches": [
+        {
+          "pattern": "靛蓝",
+          "matched": true
+        },
+        {
+          "pattern": "木.*纽扣|木.*钮扣",
+          "matched": true
+        },
+        {
+          "pattern": "自己|你.*做|亲手",
+          "matched": true
+        }
+      ]
+    },
+    {
+      "turn": 80,
+      "passed": true,
+      "matches": [
+        {
+          "pattern": "阿岚",
+          "matched": true
+        },
+        {
+          "pattern": "桂花红茶",
+          "matched": true
+        },
+        {
+          "pattern": "萤火长廊",
+          "matched": true
+        },
+        {
+          "pattern": "周六|星期六",
+          "matched": true
+        },
+        {
+          "pattern": "九点二十|9[:：]20",
+          "matched": true
+        },
+        {
+          "pattern": "橙色便签",
+          "matched": true
+        },
+        {
+          "pattern": "墨绿",
+          "matched": true
+        },
+        {
+          "pattern": "慢慢来也算前进",
+          "matched": true
+        },
+        {
+          "pattern": "靛蓝",
+          "matched": true
+        },
+        {
+          "pattern": "木.*纽扣|木.*钮扣",
+          "matched": true
+        }
+      ]
+    }
+  ],
+  "restarts": [
+    {
+      "afterTurn": 40,
+      "sameSession": true,
+      "generation": 8,
+      "startupMs": 1880,
+      "readSessionMs": 4,
+      "emotionsIdentical": true,
+      "snapshotIdentical": true,
+      "statsIdentical": true
+    }
+  ],
+  "recoveries": [
+    {
+      "afterTurn": 70,
+      "importMs": 140,
+      "bytes": 590619,
+      "sha256": "00010f64fad2b9205aba6c13c0f3b901f7529112b4b8c11000ccd1e018b95d8a",
+      "sameSession": true,
+      "emotionsIdentical": true,
+      "snapshotIdentical": true,
+      "statsIdentical": true
+    }
+  ],
+  "turns": [
+    {
+      "turn": 1,
+      "elapsedMs": 4550,
+      "generation": 0,
+      "activeEvents": 22,
+      "activeChars": 12014,
+      "archiveEvents": 22,
+      "heapUsedBytes": 92353832,
+      "rssBytes": 296960000,
+      "gcSample": true
+    },
+    {
+      "turn": 2,
+      "elapsedMs": 3729,
+      "generation": 0,
+      "activeEvents": 34,
+      "activeChars": 21115,
+      "archiveEvents": 34,
+      "heapUsedBytes": 107814160,
+      "rssBytes": 297701376,
+      "gcSample": false
+    },
+    {
+      "turn": 3,
+      "elapsedMs": 3378,
+      "generation": 0,
+      "activeEvents": 46,
+      "activeChars": 28282,
+      "archiveEvents": 46,
+      "heapUsedBytes": 119353400,
+      "rssBytes": 299659264,
+      "gcSample": false
+    },
+    {
+      "turn": 4,
+      "elapsedMs": 4364,
+      "generation": 0,
+      "activeEvents": 58,
+      "activeChars": 36970,
+      "archiveEvents": 58,
+      "heapUsedBytes": 94577784,
+      "rssBytes": 170696704,
+      "gcSample": false
+    },
+    {
+      "turn": 5,
+      "elapsedMs": 3449,
+      "generation": 0,
+      "activeEvents": 70,
+      "activeChars": 46323,
+      "archiveEvents": 70,
+      "heapUsedBytes": 95224488,
+      "rssBytes": 173002752,
+      "gcSample": false
+    },
+    {
+      "turn": 6,
+      "elapsedMs": 4051,
+      "generation": 0,
+      "activeEvents": 82,
+      "activeChars": 54731,
+      "archiveEvents": 82,
+      "heapUsedBytes": 96441248,
+      "rssBytes": 173613056,
+      "gcSample": false
+    },
+    {
+      "turn": 7,
+      "elapsedMs": 3590,
+      "generation": 0,
+      "activeEvents": 94,
+      "activeChars": 63122,
+      "archiveEvents": 94,
+      "heapUsedBytes": 98207864,
+      "rssBytes": 174231552,
+      "gcSample": false
+    },
+    {
+      "turn": 8,
+      "elapsedMs": 6126,
+      "generation": 1,
+      "activeEvents": 30,
+      "activeChars": 15990,
+      "archiveEvents": 136,
+      "heapUsedBytes": 98371656,
+      "rssBytes": 179707904,
+      "gcSample": false
+    },
+    {
+      "turn": 9,
+      "elapsedMs": 5022,
+      "generation": 1,
+      "activeEvents": 48,
+      "activeChars": 33949,
+      "archiveEvents": 154,
+      "heapUsedBytes": 97258160,
+      "rssBytes": 180387840,
+      "gcSample": false
+    },
+    {
+      "turn": 10,
+      "elapsedMs": 3308,
+      "generation": 1,
+      "activeEvents": 60,
+      "activeChars": 43421,
+      "archiveEvents": 166,
+      "heapUsedBytes": 98268792,
+      "rssBytes": 180785152,
+      "gcSample": false
+    },
+    {
+      "turn": 11,
+      "elapsedMs": 2687,
+      "generation": 1,
+      "activeEvents": 72,
+      "activeChars": 52748,
+      "archiveEvents": 178,
+      "heapUsedBytes": 98139808,
+      "rssBytes": 180903936,
+      "gcSample": false
+    },
+    {
+      "turn": 12,
+      "elapsedMs": 3270,
+      "generation": 1,
+      "activeEvents": 84,
+      "activeChars": 61358,
+      "archiveEvents": 190,
+      "heapUsedBytes": 98290744,
+      "rssBytes": 180944896,
+      "gcSample": false
+    },
+    {
+      "turn": 13,
+      "elapsedMs": 6396,
+      "generation": 2,
+      "activeEvents": 30,
+      "activeChars": 14711,
+      "archiveEvents": 232,
+      "heapUsedBytes": 97329584,
+      "rssBytes": 186376192,
+      "gcSample": false
+    },
+    {
+      "turn": 14,
+      "elapsedMs": 4185,
+      "generation": 2,
+      "activeEvents": 48,
+      "activeChars": 30601,
+      "archiveEvents": 250,
+      "heapUsedBytes": 98826088,
+      "rssBytes": 187924480,
+      "gcSample": false
+    },
+    {
+      "turn": 15,
+      "elapsedMs": 2993,
+      "generation": 2,
+      "activeEvents": 60,
+      "activeChars": 40599,
+      "archiveEvents": 262,
+      "heapUsedBytes": 103411936,
+      "rssBytes": 187949056,
+      "gcSample": false
+    },
+    {
+      "turn": 16,
+      "elapsedMs": 3284,
+      "generation": 2,
+      "activeEvents": 72,
+      "activeChars": 49785,
+      "archiveEvents": 274,
+      "heapUsedBytes": 99602664,
+      "rssBytes": 188760064,
+      "gcSample": false
+    },
+    {
+      "turn": 17,
+      "elapsedMs": 2816,
+      "generation": 2,
+      "activeEvents": 84,
+      "activeChars": 59756,
+      "archiveEvents": 286,
+      "heapUsedBytes": 103407256,
+      "rssBytes": 188628992,
+      "gcSample": false
+    },
+    {
+      "turn": 18,
+      "elapsedMs": 7452,
+      "generation": 3,
+      "activeEvents": 30,
+      "activeChars": 15537,
+      "archiveEvents": 328,
+      "heapUsedBytes": 99754216,
+      "rssBytes": 189829120,
+      "gcSample": false
+    },
+    {
+      "turn": 19,
+      "elapsedMs": 5369,
+      "generation": 3,
+      "activeEvents": 48,
+      "activeChars": 32681,
+      "archiveEvents": 346,
+      "heapUsedBytes": 102477368,
+      "rssBytes": 190124032,
+      "gcSample": false
+    },
+    {
+      "turn": 20,
+      "elapsedMs": 3766,
+      "generation": 3,
+      "activeEvents": 60,
+      "activeChars": 43231,
+      "archiveEvents": 358,
+      "heapUsedBytes": 94542064,
+      "rssBytes": 190619648,
+      "gcSample": true
+    },
+    {
+      "turn": 21,
+      "elapsedMs": 3401,
+      "generation": 3,
+      "activeEvents": 72,
+      "activeChars": 53150,
+      "archiveEvents": 370,
+      "heapUsedBytes": 98649664,
+      "rssBytes": 189804544,
+      "gcSample": false
+    },
+    {
+      "turn": 22,
+      "elapsedMs": 3187,
+      "generation": 3,
+      "activeEvents": 84,
+      "activeChars": 63540,
+      "archiveEvents": 382,
+      "heapUsedBytes": 96753448,
+      "rssBytes": 189440000,
+      "gcSample": false
+    },
+    {
+      "turn": 23,
+      "elapsedMs": 7983,
+      "generation": 4,
+      "activeEvents": 30,
+      "activeChars": 15903,
+      "archiveEvents": 424,
+      "heapUsedBytes": 103530208,
+      "rssBytes": 193040384,
+      "gcSample": false
+    },
+    {
+      "turn": 24,
+      "elapsedMs": 4095,
+      "generation": 4,
+      "activeEvents": 48,
+      "activeChars": 31952,
+      "archiveEvents": 442,
+      "heapUsedBytes": 102964768,
+      "rssBytes": 198057984,
+      "gcSample": false
+    },
+    {
+      "turn": 25,
+      "elapsedMs": 3861,
+      "generation": 4,
+      "activeEvents": 60,
+      "activeChars": 43366,
+      "archiveEvents": 454,
+      "heapUsedBytes": 101404720,
+      "rssBytes": 202944512,
+      "gcSample": false
+    },
+    {
+      "turn": 26,
+      "elapsedMs": 3852,
+      "generation": 4,
+      "activeEvents": 72,
+      "activeChars": 55676,
+      "archiveEvents": 466,
+      "heapUsedBytes": 101239408,
+      "rssBytes": 201854976,
+      "gcSample": false
+    },
+    {
+      "turn": 27,
+      "elapsedMs": 9057,
+      "generation": 5,
+      "activeEvents": 24,
+      "activeChars": 15071,
+      "archiveEvents": 502,
+      "heapUsedBytes": 103374480,
+      "rssBytes": 203706368,
+      "gcSample": false
+    },
+    {
+      "turn": 28,
+      "elapsedMs": 3626,
+      "generation": 5,
+      "activeEvents": 42,
+      "activeChars": 31638,
+      "archiveEvents": 520,
+      "heapUsedBytes": 103148160,
+      "rssBytes": 204410880,
+      "gcSample": false
+    },
+    {
+      "turn": 29,
+      "elapsedMs": 4033,
+      "generation": 5,
+      "activeEvents": 54,
+      "activeChars": 43625,
+      "archiveEvents": 532,
+      "heapUsedBytes": 102298240,
+      "rssBytes": 204673024,
+      "gcSample": false
+    },
+    {
+      "turn": 30,
+      "elapsedMs": 3827,
+      "generation": 5,
+      "activeEvents": 66,
+      "activeChars": 55803,
+      "archiveEvents": 544,
+      "heapUsedBytes": 99566744,
+      "rssBytes": 205000704,
+      "gcSample": false
+    },
+    {
+      "turn": 31,
+      "elapsedMs": 10085,
+      "generation": 6,
+      "activeEvents": 24,
+      "activeChars": 14850,
+      "archiveEvents": 580,
+      "heapUsedBytes": 105719240,
+      "rssBytes": 206225408,
+      "gcSample": false
+    },
+    {
+      "turn": 32,
+      "elapsedMs": 4727,
+      "generation": 6,
+      "activeEvents": 42,
+      "activeChars": 35354,
+      "archiveEvents": 598,
+      "heapUsedBytes": 108946400,
+      "rssBytes": 206815232,
+      "gcSample": false
+    },
+    {
+      "turn": 33,
+      "elapsedMs": 4640,
+      "generation": 6,
+      "activeEvents": 54,
+      "activeChars": 48313,
+      "archiveEvents": 610,
+      "heapUsedBytes": 107781712,
+      "rssBytes": 207298560,
+      "gcSample": false
+    },
+    {
+      "turn": 34,
+      "elapsedMs": 3380,
+      "generation": 6,
+      "activeEvents": 66,
+      "activeChars": 60434,
+      "archiveEvents": 622,
+      "heapUsedBytes": 105721848,
+      "rssBytes": 207519744,
+      "gcSample": false
+    },
+    {
+      "turn": 35,
+      "elapsedMs": 13108,
+      "generation": 7,
+      "activeEvents": 24,
+      "activeChars": 14493,
+      "archiveEvents": 658,
+      "heapUsedBytes": 99434688,
+      "rssBytes": 209379328,
+      "gcSample": false
+    },
+    {
+      "turn": 36,
+      "elapsedMs": 4642,
+      "generation": 7,
+      "activeEvents": 42,
+      "activeChars": 32635,
+      "archiveEvents": 676,
+      "heapUsedBytes": 112227776,
+      "rssBytes": 210325504,
+      "gcSample": false
+    },
+    {
+      "turn": 37,
+      "elapsedMs": 3241,
+      "generation": 7,
+      "activeEvents": 54,
+      "activeChars": 45535,
+      "archiveEvents": 688,
+      "heapUsedBytes": 107486848,
+      "rssBytes": 209862656,
+      "gcSample": false
+    },
+    {
+      "turn": 38,
+      "elapsedMs": 4845,
+      "generation": 7,
+      "activeEvents": 66,
+      "activeChars": 59760,
+      "archiveEvents": 700,
+      "heapUsedBytes": 108010888,
+      "rssBytes": 211046400,
+      "gcSample": false
+    },
+    {
+      "turn": 39,
+      "elapsedMs": 11704,
+      "generation": 8,
+      "activeEvents": 24,
+      "activeChars": 15358,
+      "archiveEvents": 736,
+      "heapUsedBytes": 105223728,
+      "rssBytes": 209870848,
+      "gcSample": false
+    },
+    {
+      "turn": 40,
+      "elapsedMs": 4783,
+      "generation": 8,
+      "activeEvents": 42,
+      "activeChars": 33591,
+      "archiveEvents": 754,
+      "heapUsedBytes": 93235272,
+      "rssBytes": 209186816,
+      "gcSample": true
+    },
+    {
+      "turn": 41,
+      "elapsedMs": 4340,
+      "generation": 8,
+      "activeEvents": 56,
+      "activeChars": 46757,
+      "archiveEvents": 768,
+      "heapUsedBytes": 92619256,
+      "rssBytes": 305946624,
+      "gcSample": true
+    },
+    {
+      "turn": 42,
+      "elapsedMs": 3391,
+      "generation": 8,
+      "activeEvents": 68,
+      "activeChars": 59482,
+      "archiveEvents": 780,
+      "heapUsedBytes": 105085536,
+      "rssBytes": 307027968,
+      "gcSample": false
+    },
+    {
+      "turn": 43,
+      "elapsedMs": 12450,
+      "generation": 9,
+      "activeEvents": 25,
+      "activeChars": 14179,
+      "archiveEvents": 817,
+      "heapUsedBytes": 94780152,
+      "rssBytes": 175243264,
+      "gcSample": false
+    },
+    {
+      "turn": 44,
+      "elapsedMs": 3237,
+      "generation": 9,
+      "activeEvents": 43,
+      "activeChars": 31925,
+      "archiveEvents": 835,
+      "heapUsedBytes": 97224680,
+      "rssBytes": 176775168,
+      "gcSample": false
+    },
+    {
+      "turn": 45,
+      "elapsedMs": 3910,
+      "generation": 9,
+      "activeEvents": 55,
+      "activeChars": 45379,
+      "archiveEvents": 847,
+      "heapUsedBytes": 97201632,
+      "rssBytes": 179326976,
+      "gcSample": false
+    },
+    {
+      "turn": 46,
+      "elapsedMs": 4173,
+      "generation": 9,
+      "activeEvents": 67,
+      "activeChars": 58680,
+      "archiveEvents": 859,
+      "heapUsedBytes": 98650872,
+      "rssBytes": 180609024,
+      "gcSample": false
+    },
+    {
+      "turn": 47,
+      "elapsedMs": 14345,
+      "generation": 10,
+      "activeEvents": 24,
+      "activeChars": 18818,
+      "archiveEvents": 895,
+      "heapUsedBytes": 95316160,
+      "rssBytes": 182259712,
+      "gcSample": false
+    },
+    {
+      "turn": 48,
+      "elapsedMs": 3802,
+      "generation": 10,
+      "activeEvents": 42,
+      "activeChars": 37276,
+      "archiveEvents": 913,
+      "heapUsedBytes": 98812080,
+      "rssBytes": 183586816,
+      "gcSample": false
+    },
+    {
+      "turn": 49,
+      "elapsedMs": 3661,
+      "generation": 10,
+      "activeEvents": 54,
+      "activeChars": 50314,
+      "archiveEvents": 925,
+      "heapUsedBytes": 102567176,
+      "rssBytes": 187809792,
+      "gcSample": false
+    },
+    {
+      "turn": 50,
+      "elapsedMs": 4366,
+      "generation": 10,
+      "activeEvents": 66,
+      "activeChars": 62797,
+      "archiveEvents": 937,
+      "heapUsedBytes": 99324016,
+      "rssBytes": 188563456,
+      "gcSample": false
+    },
+    {
+      "turn": 51,
+      "elapsedMs": 15373,
+      "generation": 11,
+      "activeEvents": 24,
+      "activeChars": 14725,
+      "archiveEvents": 973,
+      "heapUsedBytes": 98131560,
+      "rssBytes": 189370368,
+      "gcSample": false
+    },
+    {
+      "turn": 52,
+      "elapsedMs": 4728,
+      "generation": 11,
+      "activeEvents": 42,
+      "activeChars": 33133,
+      "archiveEvents": 991,
+      "heapUsedBytes": 100037472,
+      "rssBytes": 190033920,
+      "gcSample": false
+    },
+    {
+      "turn": 53,
+      "elapsedMs": 3209,
+      "generation": 11,
+      "activeEvents": 54,
+      "activeChars": 46049,
+      "archiveEvents": 1003,
+      "heapUsedBytes": 101513848,
+      "rssBytes": 189743104,
+      "gcSample": false
+    },
+    {
+      "turn": 54,
+      "elapsedMs": 3243,
+      "generation": 11,
+      "activeEvents": 66,
+      "activeChars": 58891,
+      "archiveEvents": 1015,
+      "heapUsedBytes": 98111120,
+      "rssBytes": 191221760,
+      "gcSample": false
+    },
+    {
+      "turn": 55,
+      "elapsedMs": 13271,
+      "generation": 12,
+      "activeEvents": 24,
+      "activeChars": 14763,
+      "archiveEvents": 1051,
+      "heapUsedBytes": 97558912,
+      "rssBytes": 190918656,
+      "gcSample": false
+    },
+    {
+      "turn": 56,
+      "elapsedMs": 3571,
+      "generation": 12,
+      "activeEvents": 42,
+      "activeChars": 32776,
+      "archiveEvents": 1069,
+      "heapUsedBytes": 97817392,
+      "rssBytes": 191520768,
+      "gcSample": false
+    },
+    {
+      "turn": 57,
+      "elapsedMs": 7935,
+      "generation": 12,
+      "activeEvents": 54,
+      "activeChars": 46098,
+      "archiveEvents": 1081,
+      "heapUsedBytes": 101682152,
+      "rssBytes": 193724416,
+      "gcSample": false
+    },
+    {
+      "turn": 58,
+      "elapsedMs": 3098,
+      "generation": 12,
+      "activeEvents": 66,
+      "activeChars": 59206,
+      "archiveEvents": 1093,
+      "heapUsedBytes": 99359224,
+      "rssBytes": 198955008,
+      "gcSample": false
+    },
+    {
+      "turn": 59,
+      "elapsedMs": 14816,
+      "generation": 13,
+      "activeEvents": 33,
+      "activeChars": 20977,
+      "archiveEvents": 1138,
+      "heapUsedBytes": 103230160,
+      "rssBytes": 205135872,
+      "gcSample": false
+    },
+    {
+      "turn": 60,
+      "elapsedMs": 4161,
+      "generation": 13,
+      "activeEvents": 49,
+      "activeChars": 37989,
+      "archiveEvents": 1154,
+      "heapUsedBytes": 93039096,
+      "rssBytes": 203026432,
+      "gcSample": true
+    },
+    {
+      "turn": 61,
+      "elapsedMs": 3942,
+      "generation": 13,
+      "activeEvents": 61,
+      "activeChars": 51414,
+      "archiveEvents": 1166,
+      "heapUsedBytes": 104771880,
+      "rssBytes": 205111296,
+      "gcSample": false
+    },
+    {
+      "turn": 62,
+      "elapsedMs": 14826,
+      "generation": 14,
+      "activeEvents": 31,
+      "activeChars": 20250,
+      "archiveEvents": 1209,
+      "heapUsedBytes": 95305008,
+      "rssBytes": 206958592,
+      "gcSample": false
+    },
+    {
+      "turn": 63,
+      "elapsedMs": 3474,
+      "generation": 14,
+      "activeEvents": 49,
+      "activeChars": 38110,
+      "archiveEvents": 1227,
+      "heapUsedBytes": 107415896,
+      "rssBytes": 207306752,
+      "gcSample": false
+    },
+    {
+      "turn": 64,
+      "elapsedMs": 9896,
+      "generation": 14,
+      "activeEvents": 61,
+      "activeChars": 51484,
+      "archiveEvents": 1239,
+      "heapUsedBytes": 97122208,
+      "rssBytes": 209518592,
+      "gcSample": false
+    },
+    {
+      "turn": 65,
+      "elapsedMs": 14630,
+      "generation": 15,
+      "activeEvents": 27,
+      "activeChars": 18290,
+      "archiveEvents": 1278,
+      "heapUsedBytes": 97101832,
+      "rssBytes": 209289216,
+      "gcSample": false
+    },
+    {
+      "turn": 66,
+      "elapsedMs": 4153,
+      "generation": 15,
+      "activeEvents": 43,
+      "activeChars": 34484,
+      "archiveEvents": 1294,
+      "heapUsedBytes": 109726568,
+      "rssBytes": 210493440,
+      "gcSample": false
+    },
+    {
+      "turn": 67,
+      "elapsedMs": 3227,
+      "generation": 15,
+      "activeEvents": 55,
+      "activeChars": 47272,
+      "archiveEvents": 1306,
+      "heapUsedBytes": 107204072,
+      "rssBytes": 210710528,
+      "gcSample": false
+    },
+    {
+      "turn": 68,
+      "elapsedMs": 3835,
+      "generation": 15,
+      "activeEvents": 67,
+      "activeChars": 60399,
+      "archiveEvents": 1318,
+      "heapUsedBytes": 104912208,
+      "rssBytes": 210821120,
+      "gcSample": false
+    },
+    {
+      "turn": 69,
+      "elapsedMs": 16154,
+      "generation": 16,
+      "activeEvents": 31,
+      "activeChars": 19434,
+      "archiveEvents": 1361,
+      "heapUsedBytes": 110933840,
+      "rssBytes": 212516864,
+      "gcSample": false
+    },
+    {
+      "turn": 70,
+      "elapsedMs": 3364,
+      "generation": 16,
+      "activeEvents": 49,
+      "activeChars": 36662,
+      "archiveEvents": 1379,
+      "heapUsedBytes": 93275240,
+      "rssBytes": 210800640,
+      "gcSample": true
+    },
+    {
+      "turn": 71,
+      "elapsedMs": 4317,
+      "generation": 16,
+      "activeEvents": 63,
+      "activeChars": 51117,
+      "archiveEvents": 1393,
+      "heapUsedBytes": 93056376,
+      "rssBytes": 208785408,
+      "gcSample": true
+    },
+    {
+      "turn": 72,
+      "elapsedMs": 2902,
+      "generation": 16,
+      "activeEvents": 75,
+      "activeChars": 63665,
+      "archiveEvents": 1405,
+      "heapUsedBytes": 104401448,
+      "rssBytes": 210796544,
+      "gcSample": false
+    },
+    {
+      "turn": 73,
+      "elapsedMs": 15916,
+      "generation": 17,
+      "activeEvents": 25,
+      "activeChars": 16982,
+      "archiveEvents": 1442,
+      "heapUsedBytes": 95833872,
+      "rssBytes": 211509248,
+      "gcSample": false
+    },
+    {
+      "turn": 74,
+      "elapsedMs": 6075,
+      "generation": 17,
+      "activeEvents": 43,
+      "activeChars": 36243,
+      "archiveEvents": 1460,
+      "heapUsedBytes": 96917688,
+      "rssBytes": 214093824,
+      "gcSample": false
+    },
+    {
+      "turn": 75,
+      "elapsedMs": 3454,
+      "generation": 17,
+      "activeEvents": 55,
+      "activeChars": 49084,
+      "archiveEvents": 1472,
+      "heapUsedBytes": 107997144,
+      "rssBytes": 214241280,
+      "gcSample": false
+    },
+    {
+      "turn": 76,
+      "elapsedMs": 3097,
+      "generation": 17,
+      "activeEvents": 67,
+      "activeChars": 61771,
+      "archiveEvents": 1484,
+      "heapUsedBytes": 117927104,
+      "rssBytes": 221458432,
+      "gcSample": false
+    },
+    {
+      "turn": 77,
+      "elapsedMs": 17523,
+      "generation": 18,
+      "activeEvents": 24,
+      "activeChars": 15637,
+      "archiveEvents": 1520,
+      "heapUsedBytes": 115792120,
+      "rssBytes": 232243200,
+      "gcSample": false
+    },
+    {
+      "turn": 78,
+      "elapsedMs": 5563,
+      "generation": 18,
+      "activeEvents": 42,
+      "activeChars": 35909,
+      "archiveEvents": 1538,
+      "heapUsedBytes": 107835232,
+      "rssBytes": 232722432,
+      "gcSample": false
+    },
+    {
+      "turn": 79,
+      "elapsedMs": 3087,
+      "generation": 18,
+      "activeEvents": 54,
+      "activeChars": 48566,
+      "archiveEvents": 1550,
+      "heapUsedBytes": 118645960,
+      "rssBytes": 233906176,
+      "gcSample": false
+    },
+    {
+      "turn": 80,
+      "elapsedMs": 19700,
+      "generation": 19,
+      "activeEvents": 18,
+      "activeChars": 15856,
+      "archiveEvents": 1580,
+      "heapUsedBytes": 93486408,
+      "rssBytes": 234467328,
+      "gcSample": true
+    }
+  ]
+}
