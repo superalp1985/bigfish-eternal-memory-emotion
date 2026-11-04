@@ -3,6 +3,10 @@
 </p>
 
 <p align="center">
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-2ea44f" alt="MIT License"></a>
+</p>
+
+<p align="center">
   <strong>给大肥鱼一份可以带走的记忆，给漫长的聊天一个不必重新认识的明天。</strong><br>
   DeepSeek Harness · 长期记忆 · 双方 FAME 情感 · 自动压缩 · 同一会话 · 一键迁移
 </p>
@@ -136,6 +140,10 @@
 
 当前运行时固定为项目私有的 DeepSeek Harness `0.2.2-alpha.3`，不会覆盖电脑上已有的 DSH 安装和对话。对话及模型可理解的附件会发送给你配置的模型服务，记忆提取和压缩也会产生模型调用；本地备份为压缩包，不提供加密。该项目为社区作品，与 DeepSeek 官方无隶属或背书关系。
 
+## 许可证
+
+本项目采用 [MIT License](LICENSE) 发布。
+
 ---
 
 ## English
@@ -161,3 +169,7 @@ The completed live run covered **80 turns**, **19 automatic compactions**, **12/
 The active window defaults to 2,400 events / 256,000 characters, while the durable archive has no automatic expiry or media cleanup. Image understanding uses the Harness attachment route when the selected model and provider support it; other media remains durably downloadable even when the model cannot interpret it. Model calls use the configured remote service. Backups are compressed, not encrypted. This is an independent community project.
 
 [Technical notes](docs/TECHNICAL.md) · [FAME reference](FAME_REFERENCE.md) · [Validation](VALIDATION.md) · [Visual credits](docs/ASSETS.md)
+
+### License
+
+Released under the [MIT License](LICENSE).
