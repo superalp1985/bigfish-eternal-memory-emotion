@@ -1,4 +1,8 @@
-# FAME memory implementation
+# BigFish for DeepSeek Harness：实现边界
+
+本文描述完整 BigFish 应用及其 DSH 插件内核。WorkBuddy 是在同一套记忆
+原则和核心模块之上的独立应用入口，详见
+[docs/WORKBUDDY.md](docs/WORKBUDDY.md)。
 
 User-approved scope: a DSH plugin with bounded active session replacement,
 FAME states for both participants, route memory, recall, backup and migration.

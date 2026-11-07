@@ -1,4 +1,7 @@
-# 实测记录 / Validation
+# BigFish for DeepSeek Harness：实测记录 / Validation
+
+本文记录的是原来的完整 BigFish 应用，不包含 WorkBuddy 原生插件的验收。
+WorkBuddy 的实装记录见 [docs/WORKBUDDY.md](docs/WORKBUDDY.md)。
 
 以下记录来自 2026-11-03 的文本版本验证。Windows，Node 24.22.1，DSH 0.2.1-rc.2，
 dsh-dafeiyu 0.1.23。使用隔离会话、虚构人物和测试约定。

@@ -1,6 +1,13 @@
-# WorkBuddy 原生插件
+# BigFish for WorkBuddy 原生插件
 
-BigFish Eternal Memory & Emotion 在 WorkBuddy 中采用原生插件接入：
+这是 BigFish 的 **WorkBuddy 应用入口**，不是原来的完整 BigFish 聊天应用。
+
+原来的 **BigFish for DeepSeek Harness** 继续保留，拥有自己的聊天界面、运行环境和数据目录。WorkBuddy 版本采用原生插件接入，让用户留在 WorkBuddy 中使用同一套永久记忆内核。
+
+- [返回两应用选择](../README.md)
+- [查看 BigFish for DeepSeek Harness](BIGFISH.md)
+
+插件包含：
 
 - Hooks 旁路归档；
 - Skill 约束记忆召回；
@@ -8,6 +15,8 @@ BigFish Eternal Memory & Emotion 在 WorkBuddy 中采用原生插件接入：
 - 插件数据目录保存 SQLite、媒体原件和备份。
 
 插件不接管 WorkBuddy Agent，不替换压缩系统，也不修改宿主程序。
+
+两个应用共享原文优先、媒体 SHA-256、FAME 和备份校验规则，但默认使用不同数据目录。安装 WorkBuddy 插件不会移动或读取原 BigFish 的会话库。
 
 ## 安装
 
@@ -22,7 +31,7 @@ BigFish Eternal Memory & Emotion 在 WorkBuddy 中采用原生插件接入：
 开发时可以直接加载仓库：
 
 ```text
---plugin-dir E:\FAME-DSH-Memory
+--plugin-dir <仓库绝对路径>
 ```
 
 插件清单同时提供 `.workbuddy-plugin/plugin.json` 和

@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="620" viewBox="0 0 1280 620" role="img" aria-label="一套 BigFish 共享记忆内核，两个应用入口：BigFish for DeepSeek Harness 与 WorkBuddy 原生插件">
+<title>一套 BigFish 共享记忆内核，两个应用入口</title>
+<style>
+  text{font-family:"Microsoft YaHei","PingFang SC","Noto Sans CJK SC",Arial,sans-serif;letter-spacing:0}
+  .bold{font-weight:700}
+</style>
+<rect width="1280" height="620" fill="#103c32"/>
+<rect x="32" y="32" width="1216" height="556" rx="8" fill="none" stroke="#37675a"/>
+<text x="640" y="82" font-size="20" fill="#b4d9c9" text-anchor="middle">BIGFISH  /  ONE SYSTEM · TWO APPLICATIONS</text>
+<text x="640" y="136" font-size="42" fill="#ffffff" text-anchor="middle" class="bold">一套永久记忆系统，两个明确入口</text>
+<text x="640" y="171" font-size="19" fill="#bed9cf" text-anchor="middle">共享内核，不共享运行中的数据库；安装入口与宿主完全分开</text>
+
+<rect x="72" y="218" width="346" height="222" rx="8" fill="#174b3f" stroke="#477d6d"/>
+<rect x="72" y="218" width="346" height="8" rx="4" fill="#f2bac8"/>
+<text x="104" y="262" font-size="18" fill="#b4d9c9">APPLICATION A</text>
+<text x="104" y="303" font-size="30" fill="#ffffff" class="bold">BigFish</text>
+<text x="104" y="337" font-size="24" fill="#ffffff" class="bold">for DeepSeek Harness</text>
+<text x="104" y="376" font-size="18" fill="#cfe4dc">完整聊天应用 · 原 BigFish</text>
+<text x="104" y="407" font-size="18" fill="#cfe4dc">Install.cmd · 本地浏览器界面</text>
+
+<rect x="862" y="218" width="346" height="222" rx="8" fill="#174b3f" stroke="#477d6d"/>
+<rect x="862" y="218" width="346" height="8" rx="4" fill="#f2bac8"/>
+<text x="894" y="262" font-size="18" fill="#b4d9c9">APPLICATION B</text>
+<text x="894" y="303" font-size="30" fill="#ffffff" class="bold">BigFish</text>
+<text x="894" y="337" font-size="24" fill="#ffffff" class="bold">for WorkBuddy</text>
+<text x="894" y="376" font-size="18" fill="#cfe4dc">WorkBuddy 原生插件</text>
+<text x="894" y="407" font-size="18" fill="#cfe4dc">Hooks · Skill · MCP</text>
+
+<rect x="470" y="242" width="340" height="174" rx="8" fill="#0d3029" stroke="#7da594"/>
+<text x="640" y="282" font-size="18" fill="#b4d9c9" text-anchor="middle">SHARED CORE</text>
+<text x="640" y="323" font-size="29" fill="#ffffff" text-anchor="middle" class="bold">BigFish Memory Core</text>
+<text x="640" y="357" font-size="18" fill="#f2bac8" text-anchor="middle">原文 · 多模态原件 · FAME · 备份</text>
+<text x="640" y="389" font-size="16" fill="#bed9cf" text-anchor="middle">同一套证据与存储原则</text>
+
+<path d="M418 329 H470" stroke="#f2bac8" stroke-width="3"/>
+<path d="M458 321 L470 329 L458 337" fill="none" stroke="#f2bac8" stroke-width="3"/>
+<path d="M810 329 H862" stroke="#f2bac8" stroke-width="3"/>
+<path d="M850 321 L862 329 L850 337" fill="none" stroke="#f2bac8" stroke-width="3"/>
+
+<line x1="120" y1="496" x2="1160" y2="496" stroke="#477d6d"/>
+<circle cx="218" cy="496" r="7" fill="#f2bac8"/>
+<text x="218" y="533" font-size="20" fill="#ffffff" text-anchor="middle" class="bold">各自独立安装</text>
+<circle cx="640" cy="496" r="7" fill="#f2bac8"/>
+<text x="640" y="533" font-size="20" fill="#ffffff" text-anchor="middle" class="bold">各自独立数据目录</text>
+<circle cx="1062" cy="496" r="7" fill="#f2bac8"/>
+<text x="1062" y="533" font-size="20" fill="#ffffff" text-anchor="middle" class="bold">默认互不串库</text>
+<text x="640" y="572" font-size="15" fill="#8bb7a6" text-anchor="middle">ONE EVIDENCE-FIRST MEMORY SYSTEM. TWO CLEAR PRODUCT SURFACES.</text>
+</svg>

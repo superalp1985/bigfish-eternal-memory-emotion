@@ -6,7 +6,7 @@
   "type": "module",
   "main": "src/plugin.mjs",
   "exports": { ".": "./src/plugin.mjs" },
-  "description": "Permanent multimodal memories, original evidence, and emotional continuity for WorkBuddy and DeepSeek Harness.",
+  "description": "One permanent multimodal memory system with separate applications for DeepSeek Harness and WorkBuddy.",
   "repository": {
     "type": "git",
     "url": "https://github.com/superalp1985/bigfish-eternal-memory-emotion.git"

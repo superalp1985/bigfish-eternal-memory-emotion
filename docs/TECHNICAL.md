@@ -1,7 +1,11 @@
-# BigFish Eternal Memory & Emotion
+# BigFish for DeepSeek Harness：技术说明
 
 Permanent conversation memories, emotional states and original multimodal files for BigFish.
 Includes `dsh-dafeiyu@0.1.23`, with a project-private DSH `0.2.2-alpha.3`.
+
+> 本文只说明原来的完整 BigFish 应用。WorkBuddy 原生插件的
+> Hooks、Skill、MCP、数据目录和验收记录见 [WORKBUDDY.md](WORKBUDDY.md)。
+> 两者共享记忆内核，但安装入口和默认数据目录分开。
 
 ## Launch
 
