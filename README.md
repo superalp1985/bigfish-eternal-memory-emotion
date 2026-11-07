@@ -1,10 +1,10 @@
 <p align="center">
-  <img src="docs/assets/cover.svg" alt="BigFish Eternal Memory & Emotion：聊天可以翻篇，你不该被忘记。" width="100%">
+  <img src="docs/assets/apps-overview.svg" alt="BigFish 一套共享记忆内核，两个应用：原 BigFish 完整聊天应用与 WorkBuddy 原生插件" width="100%">
 </p>
 
 <p align="center">
-  <strong>一套永久记忆系统，两个应用。</strong><br>
-  原来的 BigFish 完整应用还在，WorkBuddy 原生插件是新增入口，不是替代品。
+  <strong>这个仓库不是一个应用，是两个。</strong><br>
+  左边是原来的 BigFish 完整应用，右边是新增的 WorkBuddy 原生插件。两者共享内核，但安装入口和数据目录分开。
 </p>
 
 <p align="center">
@@ -16,6 +16,11 @@
 </p>
 
 <p align="center">
+  <a href="docs/BIGFISH.md"><img src="https://img.shields.io/badge/A-BigFish%20完整应用-2f6f61?style=for-the-badge" alt="BigFish 完整应用"></a>
+  <a href="docs/WORKBUDDY.md"><img src="https://img.shields.io/badge/B-WorkBuddy%20原生插件-ef8ba3?style=for-the-badge" alt="WorkBuddy 原生插件"></a>
+</p>
+
+<p align="center">
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-2ea44f" alt="MIT License"></a>
   <img src="https://img.shields.io/badge/applications-2-2f6f61" alt="Two applications">
   <img src="https://img.shields.io/badge/storage-local--first-ef8ba3" alt="Local-first storage">
@@ -23,6 +28,17 @@
 </p>
 
 ---
+
+> [!TIP]
+> **正在使用 WorkBuddy？** 不需要安装原来的完整聊天应用。直接在 WorkBuddy 里输入：
+>
+> ```text
+> /plugin marketplace add superalp1985/bigfish-eternal-memory-emotion
+> /plugin install bigfish-eternal-memory@bigfish-local
+> /reload-plugins
+> ```
+>
+> 完整说明：[BigFish for WorkBuddy 原生插件](docs/WORKBUDDY.md)
 
 ## 先选应用
 
@@ -34,10 +50,6 @@ BigFish 有一套共享的本地记忆内核：原文优先、媒体按 SHA-256 
 | --- | --- | --- | --- |
 | 一个开箱即用的完整聊天应用 | **BigFish for DeepSeek Harness** | 双击 `Install.cmd` | 独立应用、浏览器界面、`http://127.0.0.1:5196` |
 | 继续使用 WorkBuddy，只要永久记忆 | **WorkBuddy 原生插件** | 三条 `/plugin` 命令 | Hooks + Skill + MCP 插件 |
-
-<p align="center">
-  <img src="docs/assets/apps-overview.svg" alt="一套 BigFish 共享记忆内核，两个独立应用入口：BigFish for DeepSeek Harness 与 WorkBuddy 原生插件" width="100%">
-</p>
 
 **两边默认各用各的数据目录。** 安装 WorkBuddy 插件不会接管或移动原来的 BigFish 对话；原来的 BigFish 也不会自动读取 WorkBuddy 的会话。要分清楚，先认准下面两个名字。
 

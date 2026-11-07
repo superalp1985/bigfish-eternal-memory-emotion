@@ -5,7 +5,7 @@ README 中的 `cover.svg`、`apps-overview.svg`、`install-flow.svg`、`workbudd
 `migration.svg` 为本项目原创矢量排版与信息图。
 结构图是工作机制示意；指标图取自 2026-11-03 完成的 80 轮实测。
 
-`apps-overview.svg` 说明“一套共享记忆内核、两个应用入口”：原
+`apps-overview.svg` 同时作为 README 首屏，说明“一套共享记忆内核、两个应用入口”：原
 BigFish for DeepSeek Harness 与 BigFish for WorkBuddy 分别安装、分别使用
 数据目录，不能把两者误认成同一个入口。
 

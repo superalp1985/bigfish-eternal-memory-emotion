@@ -12,15 +12,17 @@
 
 <rect x="72" y="218" width="346" height="222" rx="8" fill="#174b3f" stroke="#477d6d"/>
 <rect x="72" y="218" width="346" height="8" rx="4" fill="#f2bac8"/>
-<text x="104" y="262" font-size="18" fill="#b4d9c9">APPLICATION A</text>
+<rect x="104" y="238" width="142" height="26" rx="13" fill="#285d50"/>
+<text x="175" y="256" font-size="14" fill="#d8ebe4" text-anchor="middle" class="bold">A · ORIGINAL APP</text>
 <text x="104" y="303" font-size="30" fill="#ffffff" class="bold">BigFish</text>
 <text x="104" y="337" font-size="24" fill="#ffffff" class="bold">for DeepSeek Harness</text>
 <text x="104" y="376" font-size="18" fill="#cfe4dc">完整聊天应用 · 原 BigFish</text>
 <text x="104" y="407" font-size="18" fill="#cfe4dc">Install.cmd · 本地浏览器界面</text>
 
-<rect x="862" y="218" width="346" height="222" rx="8" fill="#174b3f" stroke="#477d6d"/>
+<rect x="862" y="218" width="346" height="222" rx="8" fill="#174b3f" stroke="#f2bac8" stroke-width="2"/>
 <rect x="862" y="218" width="346" height="8" rx="4" fill="#f2bac8"/>
-<text x="894" y="262" font-size="18" fill="#b4d9c9">APPLICATION B</text>
+<rect x="894" y="238" width="196" height="26" rx="13" fill="#f2bac8"/>
+<text x="992" y="256" font-size="14" fill="#103c32" text-anchor="middle" class="bold">B · WORKBUDDY PLUGIN</text>
 <text x="894" y="303" font-size="30" fill="#ffffff" class="bold">BigFish</text>
 <text x="894" y="337" font-size="24" fill="#ffffff" class="bold">for WorkBuddy</text>
 <text x="894" y="376" font-size="18" fill="#cfe4dc">WorkBuddy 原生插件</text>
