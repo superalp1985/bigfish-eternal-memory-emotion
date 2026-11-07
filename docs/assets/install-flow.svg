@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="470" viewBox="0 0 1280 470">
+  <style>
+    text { font-family: "Microsoft YaHei", "PingFang SC", "Segoe UI", sans-serif; letter-spacing: 0; }
+    .title { font-size: 38px; font-weight: 700; fill: #153f36; }
+    .lead { font-size: 19px; fill: #5f7f76; }
+    .step { font-size: 18px; font-weight: 700; fill: #ffffff; }
+    .head { font-size: 25px; font-weight: 700; fill: #173f37; }
+    .body { font-size: 17px; fill: #5a756e; }
+    .code { font-family: "Cascadia Mono", Consolas, monospace; font-size: 15px; fill: #245b4f; }
+  </style>
+  <rect width="1280" height="470" fill="#f3f8f6"/>
+  <path d="M0 370C190 335 360 398 560 365S958 318 1280 350V470H0Z" fill="#dceee8"/>
+  <text x="640" y="62" class="title" text-anchor="middle">三步，把记忆留在自己的硬盘里</text>
+  <text x="640" y="96" class="lead" text-anchor="middle">插件安装、数据落盘、日常聊天，全部在 WorkBuddy 内完成。</text>
+
+  <g transform="translate(55 145)">
+    <rect width="355" height="240" rx="8" fill="#ffffff" stroke="#c3ddd5"/>
+    <circle cx="35" cy="35" r="20" fill="#1e6a58"/>
+    <text x="35" y="42" font-size="18" font-weight="700" fill="#ffffff" text-anchor="middle">1</text>
+    <text x="72" y="43" class="head">添加插件市场</text>
+    <rect x="25" y="74" width="305" height="50" rx="5" fill="#e5f1ed"/>
+    <text x="42" y="105" class="code">/plugin marketplace add ...</text>
+    <text x="27" y="158" class="body">扫描仓库里的原生插件清单。</text>
+    <text x="27" y="188" class="body">不安装额外数据库，不要求 API Key。</text>
+    <circle cx="305" cy="203" r="13" fill="#ef9bb0"/>
+  </g>
+
+  <path d="M424 265h66m-12-10 12 10-12 10" fill="none" stroke="#1e6a58" stroke-width="3"/>
+
+  <g transform="translate(463 145)">
+    <rect width="355" height="240" rx="8" fill="#ffffff" stroke="#c3ddd5"/>
+    <circle cx="35" cy="35" r="20" fill="#1e6a58"/>
+    <text x="35" y="42" font-size="18" font-weight="700" fill="#ffffff" text-anchor="middle">2</text>
+    <text x="72" y="43" class="head">安装永久记忆</text>
+    <rect x="25" y="74" width="305" height="50" rx="5" fill="#e5f1ed"/>
+    <text x="42" y="105" class="code">/plugin install bigfish...</text>
+    <text x="27" y="158" class="body">Skill、Hooks、MCP 一次接好。</text>
+    <text x="27" y="188" class="body">数据写入独立插件目录。</text>
+    <circle cx="305" cy="203" r="13" fill="#ef9bb0"/>
+  </g>
+
+  <path d="M832 265h66m-12-10 12 10-12 10" fill="none" stroke="#1e6a58" stroke-width="3"/>
+
+  <g transform="translate(871 145)">
+    <rect width="355" height="240" rx="8" fill="#173f37"/>
+    <circle cx="35" cy="35" r="20" fill="#ef9bb0"/>
+    <text x="35" y="42" font-size="18" font-weight="700" fill="#173f37" text-anchor="middle">3</text>
+    <text x="72" y="43" font-size="25" font-weight="700" fill="#ffffff">继续正常聊天</text>
+    <text x="27" y="94" font-size="18" fill="#c9e3da">原文先保存。</text>
+    <text x="27" y="128" font-size="18" fill="#c9e3da">媒体按哈希归档。</text>
+    <text x="27" y="162" font-size="18" fill="#c9e3da">需要时再带着证据回来。</text>
+    <rect x="25" y="188" width="174" height="34" rx="17" fill="#315f54"/>
+    <text x="112" y="211" font-size="15" fill="#ffffff" text-anchor="middle">记忆默认全量开启</text>
+  </g>
+
+  <text x="640" y="443" font-size="15" fill="#53776d" text-anchor="middle">WORKBUDDY NATIVE PLUGIN · LOCAL-FIRST · MIT</text>
+</svg>

@@ -1,0 +1,12 @@
+{
+  "name": "bigfish-local",
+  "description": "BigFish Eternal Memory and Emotion marketplace",
+  "plugins": [
+    {
+      "name": "bigfish-eternal-memory",
+      "source": ".",
+      "version": "1.0.0",
+      "description": "Permanent multimodal memories, original evidence, and emotional continuity for WorkBuddy."
+    }
+  ]
+}

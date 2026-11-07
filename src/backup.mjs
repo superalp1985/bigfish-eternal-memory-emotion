@@ -10,7 +10,7 @@ import { createGzip, createGunzip } from 'node:zlib';
 import { setImmediate as yieldTurn } from 'node:timers/promises';
 import { MemoryStore, TABLES, hash } from './memory-store.mjs';
 import { FAME_KEYS, FAME_VERSION, validateFame } from './fame.mjs';
-import { MediaStore } from './media-store.mjs';
+import { MEDIA_KINDS, MediaStore } from './media-store.mjs';
 
 export const BACKUP_VERSION = 2;
 export const MAX_RECORD_BYTES = 8 * 1024 * 1024;
@@ -183,9 +183,19 @@ function validateReferences(db) {
 }
 
 async function validateMediaReferences(db, mediaStore) {
-  const checked = new Set();
-  for (const row of db.prepare("SELECT json FROM events WHERE type='user/message'").iterate()) {
-    const event = jsonValue(row.json, 'user event', true);
+  const checked = new Map();
+  const verify = async ref => {
+    const known = checked.get(ref.id);
+    if (known !== undefined) {
+      if (known !== ref.bytes) fail('media reference size mismatch');
+      return;
+    }
+    try { await mediaStore.verify(ref); }
+    catch (cause) { throw new Error(`FAME backup: media verification failed: ${ref.id}`, { cause }); }
+    checked.set(ref.id, ref.bytes);
+  };
+  for (const row of db.prepare('SELECT json FROM events').iterate()) {
+    const event = jsonValue(row.json, 'event', true);
     const message = event.data?.message ?? event.data;
     const refs = message?.source?.fameMedia ?? [];
     if (!Array.isArray(refs)) fail('invalid media reference list');
@@ -197,11 +207,17 @@ async function validateMediaReferences(db, mediaStore) {
       if (ref.kind === 'image' && !['image/png', 'image/jpeg', 'image/webp', 'image/gif'].includes(ref.mediaType)) {
         fail('invalid archived image type');
       }
-      if (!checked.has(ref.id)) {
-        try { await mediaStore.verify(ref); }
-        catch (cause) { throw new Error(`FAME backup: media verification failed: ${ref.id}`, { cause }); }
-        checked.add(ref.id);
-      }
+      await verify(ref);
+    }
+    const workbuddyRefs = event.workbuddyMedia ?? [];
+    if (!Array.isArray(workbuddyRefs)) fail('invalid WorkBuddy media reference list');
+    for (const ref of workbuddyRefs) {
+      if (!isObject(ref) || !/^[a-f0-9]{64}$/.test(String(ref.id)) ||
+          !Number.isSafeInteger(ref.bytes) || ref.bytes < 0 ||
+          typeof ref.name !== 'string' || ref.name.length < 1 || ref.name.length > 240 ||
+          typeof ref.mediaType !== 'string' || !/^[\w.+-]+\/[\w.+-]+$/.test(ref.mediaType) ||
+          !MEDIA_KINDS.includes(ref.kind)) fail('invalid WorkBuddy media reference');
+      await verify(ref);
     }
   }
 }

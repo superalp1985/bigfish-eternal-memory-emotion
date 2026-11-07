@@ -10,22 +10,61 @@ const now = () => new Date().toISOString();
 export const hash = text => createHash('sha256').update(text).digest('hex');
 export const TABLES = ['sessions', 'events', 'memories', 'edges', 'fame_states', 'checkpoints'];
 
+function userQuery(text) {
+  const value = String(text ?? '');
+  const query = /<user_query>([\s\S]*?)<\/user_query>/iu.exec(value);
+  if (query) return query[1].trim();
+  return value
+    .replace(/<system-reminder\b[^>]*>[\s\S]*?<\/system-reminder>/giu, '')
+    .replace(/<[^>]+>/gu, ' ')
+    .replace(/[ \t]+\n/gu, '\n')
+    .replace(/\s{2,}/gu, ' ')
+    .trim();
+}
+
+function textFromBlocks(blocks, workbuddy = false) {
+  const parts = [];
+  for (const block of blocks) {
+    if (!block || typeof block !== 'object') continue;
+    if (!['text', 'input_text', 'output_text'].includes(block.type) || typeof block.text !== 'string') continue;
+    const text = workbuddy && block.type === 'input_text' ? userQuery(block.text) : block.text.trim();
+    if (text) parts.push(text);
+  }
+  return parts.join('\n');
+}
+
 export function eventText(event) {
   const data = event.data ?? {};
   const message = data.message ?? data;
-  const blocks = message.content ?? [];
-  const text = blocks.filter(block => block.type === 'text' && typeof block.text === 'string').map(block => block.text).join('\n');
-  if (text) return text;
-  if (Array.isArray(message.source?.fameMedia) && message.source.fameMedia.length) {
-    return message.source.fameMedia.map(ref => `[${ref.kind}: ${ref.name}, ${ref.bytes} bytes]`).join('\n');
-  }
+  const blocks = Array.isArray(message.content) ? message.content : [];
+  const workbuddy = event.type === 'workbuddy/message' || data?.workbuddy === true;
+  const text = textFromBlocks(blocks, workbuddy);
+  const mediaText = eventMediaRefs(event)
+    .map(ref => `[${ref.kind}: ${ref.name}, ${ref.bytes} bytes]`).join('\n');
+  if (text) return [text, mediaText].filter(Boolean).join('\n');
+  if (mediaText) return mediaText;
   return blocks.map(block => {
-    if (block.type === 'image' || block.type === 'file') {
-      const attachment = block.attachment ?? {};
-      return `[${block.type}: ${attachment.name ?? 'attachment'}, ${attachment.bytes ?? 0} bytes]`;
+    if (['image', 'audio', 'video', 'file', 'image_blob_ref', 'input_image', 'input_audio', 'input_video'].includes(block.type)) {
+      const attachment = block.attachment ?? block;
+      const name = attachment.original_filename ?? attachment.name ?? attachment.blob_path?.split(/[\\/]/u).at(-1) ?? 'attachment';
+      const bytes = attachment.size ?? attachment.bytes ?? 0;
+      return `[${block.type}: ${name}, ${bytes} bytes]`;
     }
     return '';
   }).filter(Boolean).join('\n');
+}
+
+export function eventMediaRefs(event) {
+  const refs = [];
+  const message = event?.data?.message ?? event?.data ?? {};
+  if (Array.isArray(message.source?.fameMedia)) refs.push(...message.source.fameMedia);
+  if (Array.isArray(event?.workbuddyMedia)) refs.push(...event.workbuddyMedia);
+  return refs;
+}
+
+function internalMemoryEvent(message) {
+  return message?.isMeta === true || message?.source?.kind === 'fame-memory' ||
+    message?.metadata?.internal === true || message?.internal === true;
 }
 
 function terms(query) {
@@ -148,6 +187,26 @@ export class MemoryStore {
     return { ...row, options: parse(row.options) };
   }
 
+  updateSessionTitle(id, title) {
+    const value = String(title ?? '').trim().slice(0, 200);
+    if (!value) throw new Error('Invalid session title');
+    const result = this.db.prepare('UPDATE sessions SET title=?,updated_at=? WHERE id=?')
+      .run(value, now(), id);
+    if (!result.changes) throw new Error('Session not found');
+    return value;
+  }
+
+  getMeta(name) {
+    const row = this.db.prepare('SELECT value FROM derived_meta WHERE name=?').get(String(name));
+    return row ? parse(row.value) : null;
+  }
+
+  setMeta(name, value) {
+    this.db.prepare(`INSERT INTO derived_meta(name,value) VALUES(?,?)
+      ON CONFLICT(name) DO UPDATE SET value=excluded.value`).run(String(name), JSON.stringify(value));
+    return value;
+  }
+
   listSessions() {
     return this.db.prepare('SELECT id,title,generation,created_at,updated_at FROM sessions ORDER BY updated_at DESC LIMIT 200').all();
   }
@@ -156,10 +215,13 @@ export class MemoryStore {
     if (!Number.isSafeInteger(event.seq) || event.seq < 0 || !Number.isSafeInteger(generation) || generation < 0) throw new Error('Invalid event position');
     const json = JSON.stringify(event);
     const sha = hash(json);
-    const existing = this.db.prepare('SELECT sha FROM events WHERE session_id=? AND generation=? AND seq=?').get(id, generation, event.seq);
+    const existing = this.db.prepare('SELECT sha,json FROM events WHERE session_id=? AND generation=? AND seq=?').get(id, generation, event.seq);
     if (existing) {
-      if (existing.sha !== sha) throw new Error('Archive event conflict');
-      return false;
+      if (existing.sha === sha) return false;
+      const previous = parse(existing.json);
+      if (event.type.startsWith('workbuddy/') &&
+          previous?.workbuddy?.lineSha256 === event.workbuddy?.lineSha256) return false;
+      throw new Error('Archive event conflict');
     }
     const text = eventText(event);
     this.transaction(() => {
@@ -168,12 +230,30 @@ export class MemoryStore {
       this.db.prepare('UPDATE sessions SET updated_at=? WHERE id=?').run(now(), id);
       const message = event.data?.message ?? event.data;
       const sourceKind = message?.source?.kind;
-      const genuine = event.type === 'assistant/message' || event.type === 'user/message' && (!sourceKind || sourceKind === 'user');
+      const workbuddyRole = event.type === 'workbuddy/message' && ['user', 'assistant'].includes(message?.role)
+        ? message.role : null;
+      const genuine = !internalMemoryEvent(message) && (
+        event.type === 'assistant/message' ||
+        event.type === 'user/message' && (!sourceKind || sourceKind === 'user') ||
+        !!workbuddyRole
+      );
       if (text && genuine) {
-        const mid = hash(`${id}:${message?.id ?? `${generation}:${event.seq}`}`);
+        const identity = workbuddyRole
+          ? `${id}:workbuddy:${event.workbuddy?.line ?? event.seq}:${workbuddyRole}`
+          : `${id}:${message?.id ?? `${generation}:${event.seq}`}`;
+        const mid = hash(identity);
+        const source = {
+          generation, seq: event.seq,
+          ...(workbuddyRole ? {
+            kind: 'workbuddy', role: workbuddyRole,
+            transcript_path: event.workbuddy?.transcriptPath ?? null,
+            line: event.workbuddy?.line ?? event.seq,
+            line_sha256: event.workbuddy?.lineSha256 ?? null,
+          } : {}),
+        };
         if (!this.db.prepare('SELECT 1 FROM memories WHERE id=?').get(mid)) this.insertMemory({
           id: mid, session_id: id, route: 'conversation/history', text,
-          source: JSON.stringify({ generation, seq: event.seq }), importance: 0.5, created_at: now(),
+          source: JSON.stringify(source), importance: workbuddyRole === 'assistant' ? 0.55 : 0.5, created_at: now(),
         });
       }
     });
@@ -284,20 +364,29 @@ export class MemoryStore {
     });
   }
 
+  getEvent(id, seq, generation = 0) {
+    const row = this.db.prepare(`SELECT generation,seq,type,json,sha,text,created_at
+      FROM events WHERE session_id=? AND generation=? AND seq=?`).get(id, generation, seq);
+    if (!row) return null;
+    if (hash(row.json) !== row.sha) throw new Error('Event checksum mismatch');
+    return { ...row, event: parse(row.json), json: undefined };
+  }
+
   transcript(id, before = Number.MAX_SAFE_INTEGER, limit = 50) {
     const rows = this.db.prepare(`SELECT e.rowid AS cursor,e.generation,e.seq,e.type,e.text,e.created_at,e.json FROM events e
-      WHERE e.session_id=? AND e.rowid<? AND e.type IN ('user/message','assistant/message') AND e.text!=''
+      WHERE e.session_id=? AND e.rowid<? AND e.type IN ('user/message','assistant/message','workbuddy/message') AND e.text!=''
       AND (e.type='assistant/message' OR coalesce(json_extract(e.json,'$.data.source.kind'),'user')='user')
       AND NOT EXISTS (SELECT 1 FROM events prior WHERE prior.session_id=e.session_id AND prior.rowid<e.rowid
         AND coalesce(json_extract(prior.json,'$.data.id'),json_extract(prior.json,'$.data.message.id')) =
             coalesce(json_extract(e.json,'$.data.id'),json_extract(e.json,'$.data.message.id')))
       ORDER BY e.rowid DESC LIMIT ?`).all(id, before, Math.min(100, limit)).reverse();
     return rows.map(row => {
-      const data = parse(row.json).data;
+      const event = parse(row.json);
+      const data = event.data;
       const message = data.message ?? data;
-      const attachments = message.source?.fameMedia ?? [];
+      const attachments = eventMediaRefs(event);
       delete row.json;
-      return { ...row, attachments };
+      return { ...row, role: message?.role ?? null, attachments };
     });
   }
 

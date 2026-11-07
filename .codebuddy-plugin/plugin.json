@@ -1,0 +1,26 @@
+{
+  "name": "bigfish-eternal-memory",
+  "version": "1.0.0",
+  "description": "Permanent multimodal memories, original evidence, and emotional continuity for WorkBuddy.",
+  "author": {
+    "name": "superalp1985"
+  },
+  "license": "MIT",
+  "defaultEnabled": true,
+  "skills": [
+    "./skills/bigfish-memory"
+  ],
+  "hooks": "./hooks/hooks.json",
+  "mcpServers": {
+    "bigfish-memory": {
+      "type": "stdio",
+      "command": "node",
+      "args": [
+        "${CODEBUDDY_PLUGIN_ROOT}/mcp/server.mjs"
+      ],
+      "env": {
+        "BIGFISH_DATA_DIR": "${CODEBUDDY_PLUGIN_DATA}"
+      }
+    }
+  }
+}

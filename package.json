@@ -1,18 +1,19 @@
 {
   "name": "bigfish-eternal-memory-emotion",
-  "version": "0.2.0",
+  "version": "1.0.0",
   "private": true,
   "license": "MIT",
   "type": "module",
   "main": "src/plugin.mjs",
   "exports": { ".": "./src/plugin.mjs" },
-  "description": "Persistent memories and emotions for BigFish, with automatic context compaction, long-session recall, and one-click backup and migration.",
+  "description": "Permanent multimodal memories, original evidence, and emotional continuity for WorkBuddy and DeepSeek Harness.",
   "repository": {
     "type": "git",
     "url": "https://github.com/superalp1985/bigfish-eternal-memory-emotion.git"
   },
   "scripts": {
     "test": "node --test tests/*.test.mjs",
+    "test:workbuddy": "node --test tests/workbuddy.test.mjs",
     "start": "node src/server.mjs",
     "test:dsh": "node --expose-gc --test tests/dsh.integration.mjs"
   },

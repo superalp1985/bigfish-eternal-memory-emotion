@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="600" viewBox="0 0 1280 600">
+  <style>
+    text { font-family: "Microsoft YaHei", "PingFang SC", "Segoe UI", sans-serif; letter-spacing: 0; }
+    .title { font-size: 36px; font-weight: 700; fill: #153f36; }
+    .lead { font-size: 19px; fill: #5e7e74; }
+    .head { font-size: 23px; font-weight: 700; fill: #173f37; }
+    .white { font-size: 22px; font-weight: 700; fill: #ffffff; }
+    .body { font-size: 16px; fill: #55736a; }
+    .small { font-size: 14px; fill: #6c877f; }
+    .code { font-family: "Cascadia Mono", Consolas, monospace; font-size: 14px; fill: #bddbd1; }
+  </style>
+  <rect width="1280" height="600" fill="#f4f8f6"/>
+  <rect x="0" y="0" width="1280" height="124" fill="#173f37"/>
+  <text x="640" y="55" font-size="34" font-weight="700" fill="#ffffff" text-anchor="middle">WorkBuddy 负责聊天，BigFish 负责不忘记</text>
+  <text x="640" y="90" font-size="18" fill="#c6e1d8" text-anchor="middle">旁路归档 · 按需召回 · 不接管宿主生命周期</text>
+
+  <g transform="translate(50 162)">
+    <rect width="285" height="330" rx="8" fill="#ffffff" stroke="#c8dfd8"/>
+    <rect width="285" height="48" rx="8" fill="#dceee8"/>
+    <circle cx="24" cy="24" r="7" fill="#ef91a8"/>
+    <circle cx="47" cy="24" r="7" fill="#e9c56f"/>
+    <circle cx="70" cy="24" r="7" fill="#62a28f"/>
+    <text x="142" y="30" font-size="16" font-weight="700" fill="#244e44" text-anchor="middle">WorkBuddy Session</text>
+    <text x="24" y="88" class="head">用户与陪伴者</text>
+    <rect x="24" y="112" width="166" height="46" rx="6" fill="#edf5f2"/>
+    <text x="38" y="141" class="body">我记得那杯茶吗？</text>
+    <rect x="96" y="176" width="165" height="52" rx="6" fill="#dceee8"/>
+    <text x="110" y="207" class="body">当然，后来换成了茉莉。</text>
+    <rect x="24" y="248" width="92" height="26" rx="13" fill="#ef9bb0"/>
+    <text x="70" y="266" font-size="13" fill="#ffffff" text-anchor="middle">情绪有证据</text>
+    <text x="24" y="310" class="small">JSONL transcript + blob references</text>
+  </g>
+
+  <path d="M345 326h58m-11-9 11 9-11 9" fill="none" stroke="#1e6a58" stroke-width="3"/>
+
+  <g transform="translate(416 162)">
+    <rect width="425" height="330" rx="8" fill="#173f37"/>
+    <text x="26" y="43" class="white">BigFish 原生插件</text>
+    <rect x="24" y="66" width="121" height="80" rx="6" fill="#28594d"/>
+    <text x="41" y="96" font-size="18" font-weight="700" fill="#ffffff">Hooks</text>
+    <text x="41" y="122" font-size="14" fill="#c4ded5">增量归档</text>
+    <rect x="152" y="66" width="121" height="80" rx="6" fill="#28594d"/>
+    <text x="169" y="96" font-size="18" font-weight="700" fill="#ffffff">MCP</text>
+    <text x="169" y="122" font-size="14" fill="#c4ded5">按需检索</text>
+    <rect x="280" y="66" width="121" height="80" rx="6" fill="#28594d"/>
+    <text x="297" y="96" font-size="18" font-weight="700" fill="#ffffff">Skill</text>
+    <text x="297" y="122" font-size="14" fill="#c4ded5">召回纪律</text>
+    <text x="24" y="184" font-size="16" fill="#c4ded5">原始优先</text>
+    <rect x="24" y="200" width="377" height="46" rx="5" fill="#214d43"/>
+    <text x="40" y="229" class="code">raw line + offset + SHA-256</text>
+    <text x="24" y="280" font-size="16" fill="#c4ded5">理解其次</text>
+    <rect x="24" y="296" width="377" height="16" rx="8" fill="#315f54"/>
+    <rect x="24" y="296" width="270" height="16" rx="8" fill="#ef9bb0"/>
+  </g>
+
+  <path d="M849 326h58m-11-9 11 9-11 9" fill="none" stroke="#1e6a58" stroke-width="3"/>
+
+  <g transform="translate(920 162)">
+    <rect width="310" height="330" rx="8" fill="#ffffff" stroke="#c8dfd8"/>
+    <text x="24" y="42" class="head">本地永久档案</text>
+    <rect x="24" y="68" width="262" height="54" rx="6" fill="#e5f1ed"/>
+    <text x="40" y="91" font-size="16" font-weight="700" fill="#245b4f">SQLite 原文与记忆</text>
+    <text x="40" y="112" class="small">session · event · evidence</text>
+    <rect x="24" y="136" width="262" height="54" rx="6" fill="#f8e7eb"/>
+    <text x="40" y="159" font-size="16" font-weight="700" fill="#87495a">SHA-256 媒体库</text>
+    <text x="40" y="180" class="small">image · audio · video · file</text>
+    <rect x="24" y="204" width="262" height="54" rx="6" fill="#e5f1ed"/>
+    <text x="40" y="227" font-size="16" font-weight="700" fill="#245b4f">FAME 情感状态</text>
+    <text x="40" y="248" class="small">user · agent · evidence</text>
+    <text x="24" y="292" font-size="17" font-weight="700" fill="#1e6a58">不自动过期</text>
+    <text x="24" y="317" class="small">容量由硬盘空间决定</text>
+  </g>
+
+  <text x="640" y="545" font-size="17" fill="#315f54" text-anchor="middle">压缩只整理模型当下带得动的上下文。原始对话和媒体原件继续留在本地。</text>
+  <text x="640" y="574" font-size="14" fill="#779089" text-anchor="middle">LOCAL-FIRST · EVIDENCE-BACKED · WORKBUDDY NATIVE</text>
+</svg>

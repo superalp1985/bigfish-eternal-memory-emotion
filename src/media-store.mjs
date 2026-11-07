@@ -5,13 +5,26 @@ import {
 } from 'node:fs';
 import { join } from 'node:path';
 import { pipeline } from 'node:stream/promises';
-import { Transform } from 'node:stream';
+import { Readable, Transform } from 'node:stream';
 
 const cleanName = value => {
   const name = String(value ?? 'attachment').replaceAll('\\', '/').split('/').at(-1)
     .replace(/[\u0000-\u001f\u007f]/g, '').slice(0, 240);
   return name || 'attachment';
 };
+
+export const MEDIA_KINDS = Object.freeze(['image', 'audio', 'video', 'document', 'binary', 'transcript', 'file']);
+
+export function mediaKind(mediaType, fallback = 'binary') {
+  const type = String(mediaType ?? '').toLowerCase();
+  if (type.startsWith('image/')) return 'image';
+  if (type.startsWith('audio/')) return 'audio';
+  if (type.startsWith('video/')) return 'video';
+  if (type.startsWith('text/') || type === 'application/pdf' || type === 'application/json' ||
+      type.includes('word') || type.includes('excel') || type.includes('powerpoint') ||
+      type.includes('opendocument')) return 'document';
+  return MEDIA_KINDS.includes(fallback) ? fallback : 'binary';
+}
 
 export class MediaStore {
   constructor(root) {
@@ -25,7 +38,7 @@ export class MediaStore {
   }
 
   async putStream(source, { name, mediaType = 'application/octet-stream', kind = 'file', expectedId, expectedBytes } = {}) {
-    if (!['image', 'file'].includes(kind) || typeof mediaType !== 'string' ||
+    if (!MEDIA_KINDS.includes(kind) || typeof mediaType !== 'string' ||
         !/^[\w.+-]+\/[\w.+-]+$/.test(mediaType)) throw new Error('Invalid media metadata');
     mkdirSync(this.objects, { recursive: true });
     const staging = mkdtempSync(join(this.root, '.staging-'));
@@ -55,6 +68,16 @@ export class MediaStore {
     } finally {
       rmSync(staging, { recursive: true, force: true, maxRetries: 3, retryDelay: 50 });
     }
+  }
+
+  async putFile(path, options = {}) {
+    const metadata = options;
+    const info = statSync(path);
+    return this.putStream(createReadStream(path), { ...metadata, expectedBytes: metadata.expectedBytes ?? info.size });
+  }
+
+  async putBuffer(data, options = {}) {
+    return this.putStream(Readable.from([Buffer.from(data)]), options);
   }
 
   exists(id) { return existsSync(this.path(id)); }
